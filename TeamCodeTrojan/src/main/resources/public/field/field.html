@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Field</title>
+    <link rel="stylesheet" href="/public/field/field.css">
+    <script src="/public/scripts/unit.js"></script>
+    <script src="/public/scripts/positions.js"></script>
+    <script src="/public/field/waypoint.js"></script>
+</head>
+<body>
+    <div class="content">
+        <div class="menu-sidebar">
+            <div class="single-waypoint-editor">
+                <h2>Hard Waypoint</h2>
+                <div>
+                    <label for="x-coord">X: </label>
+                    <input type="text" id="x-coord" value="0" step=".01">
+                    <select>
+                        <option value="inches">in</option>
+                        <option value="feet">ft</option>
+                        <option value="meters">cm</option>
+                        <option value="meters">m</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="y-coord">Y: </label>
+                    <input type="text" id="y-coord" value="0" step=".01">
+                    <select>
+                        <option value="inches">in</option>
+                        <option value="feet">ft</option>
+                        <option value="meters">cm</option>
+                        <option value="meters">m</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="heading">°&nbsp; </label>
+                    <input type="text" id="heading" value="0" step=".01">
+                    <select>
+                        <option value="radians">radians</option>
+                        <option value="degrees">degrees</option>
+                    </select>
+                </div>
+            </div>
+            <div class="single-waypoint-editor">
+                <h2>Control Waypoint 1</h2>
+                <div>
+                    <label for="x-coord-soft-1">X: </label>
+                    <input type="text" id="x-coord-soft-1" value="0" step=".01">
+                    <select>
+                        <option value="inches">in</option>
+                        <option value="feet">ft</option>
+                        <option value="meters">cm</option>
+                        <option value="meters">m</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="y-coord-soft-1">Y: </label>
+                    <input type="text" id="y-coord-soft-1" value="0" step=".01">
+                    <select>
+                        <option value="inches">in</option>
+                        <option value="feet">ft</option>
+                        <option value="meters">cm</option>
+                        <option value="meters">m</option>
+                    </select>
+                </div>
+            </div>
+            <div class="single-waypoint-editor">
+                <h2>Control Waypoint 2</h2>
+                <div>
+                    <label for="x-coord-soft-2">X: </label>
+                    <input type="text" id="x-coord-soft-2" value="0" step=".01">
+                    <select>
+                        <option value="inches">in</option>
+                        <option value="feet">ft</option>
+                        <option value="meters">cm</option>
+                        <option value="meters">m</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="y-coord-soft-2">Y: </label>
+                    <input type="text" id="y-coord-soft-2" value="0" step=".01">
+                    <select>
+                        <option value="inches">in</option>
+                        <option value="feet">ft</option>
+                        <option value="meters">cm</option>
+                        <option value="meters">m</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="canvas-container">
+            <canvas id="field"></canvas>
+        </div>
+        <div class="waypoint-editor">
+            <div class="waypoint-list">
+                <div id="add-waypoint">+ <i>Add New Waypoint</i></div>
+            </div>
+        </div>
+    </div>
+    <script src="/public/field/centerstage.js"></script>
+    <script src="/public/field/field.js"></script>
+</body>
+</html>
