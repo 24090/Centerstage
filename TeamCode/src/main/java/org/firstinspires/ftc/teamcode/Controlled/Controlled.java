@@ -91,10 +91,10 @@ public class Controlled extends OpMode {
                 break;
             }
             if (gamepad1.left_bumper){
-                motorController1.servoSetPosition(0.23);
+                motorController1.servo1SetPosition(0.23);
             }
             if (gamepad1.right_bumper){
-                motorController1.servoSetPosition(0.9);
+                motorController1.servo1SetPosition(0.9);
             }
             if (gamepad1.b){
                 motorController1.servo2SetPosition(0.5);

@@ -24,7 +24,7 @@ public class AutomaticRight extends LinearOpMode {
         motorController.init(hardwareMap);
         waitForStart();
         if (opModeIsActive()) {
-            motorController.servoSetPosition(0.9);
+            motorController.servo1SetPosition(0.9);
             motorController.masterMotorControl( -0.4,-0.4,-0.4,-0.4);
             sleep(200);
             motorController.masterMotorControl(0,0,0,0);

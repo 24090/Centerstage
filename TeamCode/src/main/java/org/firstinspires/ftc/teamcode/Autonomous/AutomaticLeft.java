@@ -45,18 +45,18 @@ public class AutomaticLeft extends LinearOpMode {
             if (opModeIsActive()){
                 switch (positionOfPixel){
                     case "middle":
-                        motorController.motorMasterRotate("front",2.5,2.5,2.5,2.5);
-                        motorController.servoSetPosition(0.23);
-                        motorController.motorMasterRotate("back",1.5,1.5,1.5,1.5);
+                        motorController.masterMotorRotate(2.5,2.5,2.5,2.5);
+                        motorController.servo1SetPosition(0.23);
+                        motorController.masterMotorRotate(-1.5,-1.5,-1.5,-1.5);
                         break;
                     case "left":
-                        motorController.motorMasterRotate("front",1.7,1.7,1.7,1.7);
+                        motorController.masterMotorRotate(1.7,1.7,1.7,1.7);
                         motorController.masterMotorControl(-0.1,-0.1,0.1,0.1);
                         sleep(1100);
                         motorController.masterMotorControl(0,0,0,0);
                         break;
                     case "right":
-                        motorController.motorMasterRotate("front",1.7,1.7,1.7,1.7);
+                        motorController.masterMotorRotate(1.7,1.7,1.7,1.7);
                         motorController.masterMotorControl(0.1,0.1,-0.1,-0.1);
                         sleep(1100);
                         motorController.masterMotorControl(0,0,0,0);
