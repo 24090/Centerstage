@@ -32,14 +32,10 @@ public class Automatic2 extends OpMode {
         List<Recognition> currentRecognitions = tFod.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
         for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-            telemetry.addData(""," ");
-            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
-            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+            logImageData(recognition);
         }
     }
+
     @Override
     public void start(){
         double initialTime = System.currentTimeMillis();
@@ -56,12 +52,7 @@ public class Automatic2 extends OpMode {
             List<Recognition> currentRecognitions = tFod.getRecognitions();
             telemetry.addData("# Objects Detected", currentRecognitions.size());
             for (Recognition recognition : currentRecognitions) {
-                double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-                double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-                telemetry.addData(""," ");
-                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                telemetry.addData("- Position", "%.0f / %.0f", x, y);
-                telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+                logImageData(recognition);
             }
         }
         initialTime = System.currentTimeMillis();
@@ -77,12 +68,7 @@ public class Automatic2 extends OpMode {
             List<Recognition> currentRecognitions = tFod.getRecognitions();
             telemetry.addData("# Objects Detected", currentRecognitions.size());
             for (Recognition recognition : currentRecognitions) {
-                double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-                double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-                telemetry.addData(""," ");
-                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                telemetry.addData("- Position", "%.0f / %.0f", x, y);
-                telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+                logImageData(recognition);
             }
         }
         initialTime = System.currentTimeMillis();
@@ -98,18 +84,21 @@ public class Automatic2 extends OpMode {
             List<Recognition> currentRecognitions = tFod.getRecognitions();
             telemetry.addData("# Objects Detected", currentRecognitions.size());
             for (Recognition recognition : currentRecognitions) {
-                double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-                double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-                telemetry.addData(""," ");
-                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                telemetry.addData("- Position", "%.0f / %.0f", x, y);
-                telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+               logImageData(recognition);
             }
         }
         motorController.masterMotorControl(0,0,0,0);
         telemetry.addData("Position", positionOfPixel);
     }
     public void loop(){
+    }
+    public void logImageData(Recognition recognition){
+        double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
+        double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+        telemetry.addData(""," ");
+        telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+        telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
     }
 }
 
