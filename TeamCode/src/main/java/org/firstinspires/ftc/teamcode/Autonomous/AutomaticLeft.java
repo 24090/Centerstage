@@ -1,44 +1,68 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 @Autonomous()
 public class AutomaticLeft extends LinearOpMode {
-    private AprilTagProcessor aprilTagProcessor;
-    private TfodProcessor tFod;
-    private VisionPortal visionPortal;
     MotorController motorController;
-    private String positionOfPixel;
-
-    // 55 degrees
+    private String positionOfPixel = "";
+    HuskyLens huskyLens;
+    boolean autoComplete = false;
     @Override
     public void runOpMode() {
+        huskyLens = hardwareMap.get(HuskyLens.class, "HuskyLens");
+        if (!huskyLens.knock()) {
+            telemetry.addData(">>", "Problem communicating with " + huskyLens.getDeviceName());
+        } else {
+            telemetry.addData(">>", "Press start to continue");
+        }
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
         motorController = new MotorController();
         motorController.init(hardwareMap);
+        telemetry.update();
         waitForStart();
-        if (opModeIsActive()) {
-            motorController.servoSetPosition(0.9);
-            motorController.masterMotorControl( -0.4,-0.4,-0.4,-0.4);
-            sleep(200);
-            motorController.masterMotorControl(0,0,0,0);
-            sleep(200);
-            motorController.masterMotorControl(0.4,-0.4,0.4,-0.4);
-            sleep(1200);
-            motorController.masterMotorControl(0,0,0,0);
-            sleep(200);
-            motorController.masterMotorControl( -0.4,-0.4,-0.4,-0.4);
-            sleep(200);
-            motorController.masterMotorControl(0,0,0,0);
-            sleep(200);
-            motorController.masterMotorControl( 0.4,0.4,0.4,0.4);
-            sleep(350);
-            motorController.masterMotorControl(0,0,0,0);
+        while (opModeIsActive() && positionOfPixel == "") {
+            HuskyLens.Block[] blocks = huskyLens.blocks();
+            for (int i = 0; i < blocks.length; i++){
+                telemetry.addData("Block", blocks[i].toString());
+                if ((130 < blocks[i].x && blocks[i].x < 180) && (155 < blocks[i].y && blocks[i].y < 200)) {
+                    positionOfPixel = "middle";
+                    telemetry.addData("Position", positionOfPixel);
+                }
+                if ((260 < blocks[i].x && blocks[i].x < 310) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                    positionOfPixel = "right";
+                    telemetry.addData("Position", positionOfPixel);
+                }
+                if ((10 < blocks[i].x && blocks[i].x < 50) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                    positionOfPixel = "left";
+                    telemetry.addData("Position", positionOfPixel);
+                }
+            }
+            telemetry.update();
+            }
+            if (opModeIsActive()){
+                switch (positionOfPixel){
+                    case "middle":
+                        motorController.motorMasterRotate("front",2.5,2.5,2.5,2.5);
+                        motorController.servoSetPosition(0.23);
+                        motorController.motorMasterRotate("back",1.5,1.5,1.5,1.5);
+                        break;
+                    case "left":
+                        motorController.motorMasterRotate("front",1.7,1.7,1.7,1.7);
+                        motorController.masterMotorControl(-0.1,-0.1,0.1,0.1);
+                        sleep(1100);
+                        motorController.masterMotorControl(0,0,0,0);
+                        break;
+                    case "right":
+                        motorController.motorMasterRotate("front",1.7,1.7,1.7,1.7);
+                        motorController.masterMotorControl(0.1,0.1,-0.1,-0.1);
+                        sleep(1100);
+                        motorController.masterMotorControl(0,0,0,0);
+                        break;
+                }
+            }
         }
-    }
 }
 
