@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.lang.Math;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class MotorController {
     public DcMotor motor1;
@@ -13,6 +14,7 @@ public class MotorController {
     private Servo servo1;
     private Servo servo2;
     double ticksPerRotation;
+    boolean startRotation;
 
     public void init(HardwareMap hwMap){
         servo1 = hwMap.get(Servo.class, "servo");
@@ -56,12 +58,12 @@ public class MotorController {
     public double RotationsToTicks(double rotations){
         return rotations * (0.2*ticksPerRotation);
     }
-    public void masterMotorRotate(double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4) {
+    public void masterMotorRotate(LinearOpMode opMode, double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4) {
         // create threads for each motor and run them
-        Thread motorThread1 = new Thread(() -> {rotateMotor(motorRotations1, motor1);});
-        Thread motorThread2 = new Thread(() -> {rotateMotor(motorRotations2, motor2);});
-        Thread motorThread3 = new Thread(() -> {rotateMotor(motorRotations3, motor3);});
-        Thread motorThread4 = new Thread(() -> {rotateMotor(motorRotations4, motor4);});
+        Thread motorThread1 = new Thread(() -> {rotateMotor(opMode,motorRotations1, motor1);});
+        Thread motorThread2 = new Thread(() -> {rotateMotor(opMode,motorRotations2, motor2);});
+        Thread motorThread3 = new Thread(() -> {rotateMotor(opMode,motorRotations3, motor3);});
+        Thread motorThread4 = new Thread(() -> {rotateMotor(opMode,motorRotations4, motor4);});
         motorThread1.start();
         motorThread2.start();
         motorThread3.start();
@@ -69,11 +71,11 @@ public class MotorController {
         // wait until threads are done executing
         while (motorThread1.isAlive()||motorThread2.isAlive()||motorThread3.isAlive()||motorThread4.isAlive()){;}
     }
-    public void rotateMotor(double motorRotations, DcMotor motor){
+    public void rotateMotor(LinearOpMode opMode, double motorRotations, DcMotor motor){
         double initialRotation = getMotorRotations(motor);
-        while (Math.abs(getMotorRotations(motor) - initialRotation) < Math.abs(motorRotations))
+        while ((opMode.opModeIsActive()) && (Math.abs(getMotorRotations(motor) - initialRotation) < Math.abs(motorRotations)))
         {
-            motor.setPower(0.5 * Math.signum(motorRotations));
+            motor.setPower(0.1 * Math.signum(motorRotations));
         }
         motor.setPower(0);
     }
