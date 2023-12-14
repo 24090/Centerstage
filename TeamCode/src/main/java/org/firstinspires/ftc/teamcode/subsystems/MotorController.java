@@ -3,18 +3,22 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import java.lang.Math;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 public class MotorController {
     public DcMotor motor1;
     public DcMotor motor2;
     public DcMotor motor3;
     public DcMotor motor4;
-    private Servo servo;
+    private Servo servo1;
     private Servo servo2;
     double ticksPerRotation;
+    boolean startRotation;
 
     public void init(HardwareMap hwMap){
-        servo = hwMap.get(Servo.class, "servo");
-        servo.setDirection(Servo.Direction.FORWARD);
+        servo1 = hwMap.get(Servo.class, "servo");
+        servo1.setDirection(Servo.Direction.FORWARD);
         servo2 = hwMap.get(Servo.class, "servo2");
         servo2.setDirection(Servo.Direction.FORWARD);
         motor1 = hwMap.get(DcMotor.class, "motor1");
@@ -36,80 +40,44 @@ public class MotorController {
         ticksPerRotation = motor1.getMotorType().getTicksPerRev();
 
     }
-    public void servoSetPosition(double position){
+    public void servoSetPosition(Servo servo, double position){
         servo.setPosition(position);
+    }
+    public void servo1SetPosition(double position){
+        servo1.setPosition(position);
     }
     public void servo2SetPosition(double position){
         servo2.setPosition(position);
     }
-    public double getRotations1(){
-        return motor1.getCurrentPosition()/ticksPerRotation;
+    public double getMotorRotations(DcMotor motor){
+        return TicksToRotations(motor.getCurrentPosition());
     }
-    public void motor1Rotations(double motorRotations1){
-        double initialRotation = motor1.getCurrentPosition()/(0.2*ticksPerRotation);
-        while ((motor1.getCurrentPosition()/(0.2*ticksPerRotation)) - initialRotation < motorRotations1){
-            motor1.setPower(0.5);
+    public double TicksToRotations(double ticks){
+        return ticks/(0.2*ticksPerRotation);
+    }
+    public double RotationsToTicks(double rotations){
+        return rotations * (0.2*ticksPerRotation);
+    }
+    public void masterMotorRotate(LinearOpMode opMode, double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4) {
+        // create threads for each motor and run them
+        Thread motorThread1 = new Thread(() -> {rotateMotor(opMode,motorRotations1, motor1);});
+        Thread motorThread2 = new Thread(() -> {rotateMotor(opMode,motorRotations2, motor2);});
+        Thread motorThread3 = new Thread(() -> {rotateMotor(opMode,-motorRotations3, motor3);});
+        Thread motorThread4 = new Thread(() -> {rotateMotor(opMode,-motorRotations4, motor4);});
+        motorThread1.start();
+        motorThread2.start();
+        motorThread3.start();
+        motorThread4.start();
+        // wait until threads are done executing
+        while (motorThread1.isAlive()||motorThread2.isAlive()||motorThread3.isAlive()||motorThread4.isAlive()){;}
+    }
+    public void rotateMotor(LinearOpMode opMode, double motorRotations, DcMotor motor){
+        double initialRotation = getMotorRotations(motor);
+        while ((opMode.opModeIsActive()) && (Math.abs(getMotorRotations(motor) - initialRotation) < Math.abs(motorRotations)))
+        {
+            motor.setPower(0.1 * Math.signum(motorRotations));
         }
-        motor1.setPower(0);
-    }
-    public void motor2Rotations(double motorRotations2){
-        double initialRotation = motor2.getCurrentPosition()/(0.2*ticksPerRotation);
-        while ((motor2.getCurrentPosition()/(0.2*ticksPerRotation)) - initialRotation < motorRotations2){
-            motor2.setPower(0.5);
-        }
-        motor2.setPower(0);
-    }
-    public void motor3Rotations(double motorRotations3){
-        double initialRotation = motor3.getCurrentPosition()/(0.2*ticksPerRotation);
-        while ((motor3.getCurrentPosition()/(0.2*ticksPerRotation)) - initialRotation < motorRotations3){
-            motor3.setPower(0.5);
-        }
-        motor3.setPower(0);
-    }
-    public void motor4Rotations(double motorRotations4){
-        double initialRotation = motor4.getCurrentPosition()/(0.2*ticksPerRotation);
-        while ((motor4.getCurrentPosition()/(0.2*ticksPerRotation)) - initialRotation < motorRotations4){
-            motor4.setPower(0.5);
-        }
-        motor4.setPower(0);
-    }
-    public void motorMasterRotate(String direction,double mtr1, double mtr2, double mtr3, double mtr4) {
-        double initialRotation4 = motor4.getCurrentPosition() / (0.2 * ticksPerRotation);
-        double initialRotation3 = motor3.getCurrentPosition() / (0.2 * ticksPerRotation);
-        double initialRotation2 = motor2.getCurrentPosition() / (0.2 * ticksPerRotation);
-        double initialRotation1 = motor1.getCurrentPosition() / (0.2 * ticksPerRotation);
-        if (direction == "front") {
-            while (((motor4.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation4 < mtr4) &&
-                    ((motor3.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation3 < mtr3) &&
-                    ((motor2.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation2 < mtr2) &&
-                    ((motor1.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation1 < mtr1)) {
-                motor1.setPower(0.5);
-                motor2.setPower(0.5);
-                motor3.setPower(-0.5);
-                motor4.setPower(-0.5);
-            }
-        }
-        if (direction == "back") {
-            while (((motor4.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation4 > mtr4) &&
-                    ((motor3.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation3 > mtr3) &&
-                    ((motor2.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation2 > mtr2) &&
-                    ((motor1.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation1 > mtr1)) {
-                motor1.setPower(-0.5);
-                motor2.setPower(-0.5);
-                motor3.setPower(0.5);
-                motor4.setPower(0.5);
-            }
-        }
-        motor1.setPower(0);
-        motor2.setPower(0);
-        motor3.setPower(0);
-        motor4.setPower(0);
-    }
-    public double getRotations(){
-        return motor1.getCurrentPosition()/(0.2*ticksPerRotation);
-    }
-    public double getTicksPerRotation(){
-        return (0.2*ticksPerRotation);
+        motor.setPower(0);
     }
     public void masterMotorControl(double motor1Speed, double motor2Speed, double motor3Speed, double motor4Speed){
         motor1.setPower(-motor1Speed);
