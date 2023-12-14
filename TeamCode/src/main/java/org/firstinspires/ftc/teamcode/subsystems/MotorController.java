@@ -83,21 +83,43 @@ public class MotorController {
                     ((motor3.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation3 < mtr3) &&
                     ((motor2.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation2 < mtr2) &&
                     ((motor1.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation1 < mtr1)) {
-                motor1.setPower(0.5);
-                motor2.setPower(0.5);
-                motor3.setPower(-0.5);
-                motor4.setPower(-0.5);
+                motor1.setPower(0.1);
+                motor2.setPower(0.1);
+                motor3.setPower(-0.1);
+                motor4.setPower(-0.1);
             }
         }
         if (direction == "back") {
-            while (((motor4.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation4 > mtr4) &&
-                    ((motor3.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation3 > mtr3) &&
-                    ((motor2.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation2 > mtr2) &&
-                    ((motor1.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation1 > mtr1)) {
-                motor1.setPower(-0.5);
-                motor2.setPower(-0.5);
-                motor3.setPower(0.5);
-                motor4.setPower(0.5);
+            while (((motor4.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation4 > -mtr4) &&
+                    ((motor3.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation3 > -mtr3) &&
+                    ((motor2.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation2 > -mtr2) &&
+                    ((motor1.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation1 > -mtr1)) {
+                motor1.setPower(-0.1);
+                motor2.setPower(-0.1);
+                motor3.setPower(0.1);
+                motor4.setPower(0.1);
+            }
+        }
+        if (direction == "rotateLeft"){
+            while (((motor4.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation4 > -mtr4) &&
+                    ((motor3.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation3 > -mtr3) &&
+                    ((motor2.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation2 < mtr2) &&
+                    ((motor1.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation1 < mtr1)) {
+                motor1.setPower(0.1);
+                motor2.setPower(0.1);
+                motor3.setPower(0.1);
+                motor4.setPower(0.1);
+            }
+        }
+        if (direction == "rotateRight"){
+            while (((motor4.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation4 < mtr4) &&
+                    ((motor3.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation3 < mtr3) &&
+                    ((motor2.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation2 > -mtr2) &&
+                    ((motor1.getCurrentPosition() / (0.2 * ticksPerRotation)) - initialRotation1 > -mtr1)) {
+                motor1.setPower(-0.1);
+                motor2.setPower(-0.1);
+                motor3.setPower(-0.1);
+                motor4.setPower(-0.1);
             }
         }
         motor1.setPower(0);

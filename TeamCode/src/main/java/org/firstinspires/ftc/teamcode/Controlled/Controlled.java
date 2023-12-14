@@ -16,7 +16,6 @@ public class Controlled extends OpMode {
     public void init() {
         telemetry.addData("Hello", "World");
         motorController1.init(hardwareMap);
-        motorController1.servo2SetPosition(0.23);
     }
 
     @Override
@@ -95,9 +94,6 @@ public class Controlled extends OpMode {
             }
             if (gamepad1.right_bumper){
                 motorController1.servoSetPosition(0.9);
-            }
-            if (gamepad1.b){
-                motorController1.servo2SetPosition(0.5);
             }
         }
     }
