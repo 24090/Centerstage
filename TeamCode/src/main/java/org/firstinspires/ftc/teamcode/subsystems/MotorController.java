@@ -62,8 +62,8 @@ public class MotorController {
         // create threads for each motor and run them
         Thread motorThread1 = new Thread(() -> {rotateMotor(opMode,motorRotations1, motor1);});
         Thread motorThread2 = new Thread(() -> {rotateMotor(opMode,motorRotations2, motor2);});
-        Thread motorThread3 = new Thread(() -> {rotateMotor(opMode,motorRotations3, motor3);});
-        Thread motorThread4 = new Thread(() -> {rotateMotor(opMode,motorRotations4, motor4);});
+        Thread motorThread3 = new Thread(() -> {rotateMotor(opMode,-motorRotations3, motor3);});
+        Thread motorThread4 = new Thread(() -> {rotateMotor(opMode,-motorRotations4, motor4);});
         motorThread1.start();
         motorThread2.start();
         motorThread3.start();
