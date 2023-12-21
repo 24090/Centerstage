@@ -38,10 +38,6 @@ public class MotorController {
         motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor4.setDirection(DcMotorSimple.Direction.FORWARD);
         ticksPerRotation = motor1.getMotorType().getTicksPerRev();
-
-    }
-    public void servoSetPosition(Servo servo, double position){
-        servo.setPosition(position);
     }
     public void servo1SetPosition(double position){
         servo1.setPosition(position);
@@ -58,12 +54,18 @@ public class MotorController {
     public double RotationsToTicks(double rotations){
         return rotations * (0.2*ticksPerRotation);
     }
-    public void masterMotorRotate(LinearOpMode opMode, double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4) {
+    //function without power input
+    public void masterMotorRotate(LinearOpMode opMode, double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
+        masterMotorRotate(opMode, new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{0.1, 0.1, 0.1, 0.1});
+    }
+    //function with power input
+    public void masterMotorRotate(LinearOpMode opMode, double[] motorRotations, double[] motorPowers) {
         // create threads for each motor and run them
-        Thread motorThread1 = new Thread(() -> {rotateMotor(opMode,motorRotations1, motor1);});
-        Thread motorThread2 = new Thread(() -> {rotateMotor(opMode,motorRotations2, motor2);});
-        Thread motorThread3 = new Thread(() -> {rotateMotor(opMode,-motorRotations3, motor3);});
-        Thread motorThread4 = new Thread(() -> {rotateMotor(opMode,-motorRotations4, motor4);});
+
+        Thread motorThread1 = new Thread(() -> {rotateMotor(opMode,motorRotations[0], motorPowers[0], motor1);});
+        Thread motorThread2 = new Thread(() -> {rotateMotor(opMode,motorRotations[1], motorPowers[1],motor2);});
+        Thread motorThread3 = new Thread(() -> {rotateMotor(opMode,-motorRotations[2], motorPowers[2], motor3);});
+        Thread motorThread4 = new Thread(() -> {rotateMotor(opMode,-motorRotations[3], motorPowers[3], motor4);});
         motorThread1.start();
         motorThread2.start();
         motorThread3.start();
@@ -71,19 +73,31 @@ public class MotorController {
         // wait until threads are done executing
         while (motorThread1.isAlive()||motorThread2.isAlive()||motorThread3.isAlive()||motorThread4.isAlive()){;}
     }
-    public void rotateMotor(LinearOpMode opMode, double motorRotations, DcMotor motor){
+    public void rotateMotor(LinearOpMode opMode, double motorRotations, double motorPower, DcMotor motor){
         double initialRotation = getMotorRotations(motor);
         while ((opMode.opModeIsActive()) && (Math.abs(getMotorRotations(motor) - initialRotation) < Math.abs(motorRotations)))
         {
-            motor.setPower(0.1 * Math.signum(motorRotations));
+            motor.setPower(motorPower * Math.signum(motorRotations));
         }
         motor.setPower(0);
     }
-    public void masterMotorControl(double motor1Speed, double motor2Speed, double motor3Speed, double motor4Speed){
-        motor1.setPower(-motor1Speed);
-        motor2.setPower(-motor2Speed);
-        motor3.setPower(motor3Speed);
-        motor4.setPower(motor4Speed);
+    public void masterMotorControl(double motor1Power, double motor2Power, double motor3Power, double motor4Power){
+        motor1.setPower(-motor1Power);
+        motor2.setPower(-motor2Power);
+        motor3.setPower(motor3Power);
+        motor4.setPower(motor4Power);
+    }
+    public void masterMotorControl(double[] motorPowers){
+        masterMotorControl(motorPowers[0], motorPowers[1], motorPowers[2], motorPowers[3]);
+    }
+    public void setPowerByVector(double amount_forward, double amount_sideways, double amount_turn){
+        masterMotorControl(getPowersFromVector(amount_forward, amount_sideways, amount_turn));
+    }
+
+    public double[] getPowersFromVector(double amount_forward, double amount_sideways, double amount_turn){
+        double RightwardPower = amount_forward + amount_sideways;
+        double LeftwardPower = amount_forward - amount_sideways;
+        double denominator = Math.max(Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn), 1) * 10;
+        return new double[] {(LeftwardPower + amount_turn)/denominator, (RightwardPower + amount_turn)/denominator, (RightwardPower - amount_turn)/denominator, (LeftwardPower - amount_turn)/denominator};
     }
 }
-
