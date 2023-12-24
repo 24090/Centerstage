@@ -81,19 +81,15 @@ public class MotorController {
         }
         motor.setPower(0);
     }
-    public void masterMotorControl(double motor1Power, double motor2Power, double motor3Power, double motor4Power){
-        motor1.setPower(-motor1Power);
-        motor2.setPower(-motor2Power);
-        motor3.setPower(motor3Power);
-        motor4.setPower(motor4Power);
-    }
     public void masterMotorControl(double[] motorPowers){
-        masterMotorControl(motorPowers[0], motorPowers[1], motorPowers[2], motorPowers[3]);
+        motor1.setPower(motorPowers[0]);
+        motor2.setPower(motorPowers[1]);
+        motor3.setPower(motorPowers[2]);
+        motor4.setPower(motorPowers[3]);
     }
     public void setPowerByVector(double amount_forward, double amount_sideways, double amount_turn){
         masterMotorControl(getPowersFromVector(amount_forward, amount_sideways, amount_turn));
     }
-
     public double[] getPowersFromVector(double amount_forward, double amount_sideways, double amount_turn){
         double RightwardPower = amount_forward + amount_sideways;
         double LeftwardPower = amount_forward - amount_sideways;
