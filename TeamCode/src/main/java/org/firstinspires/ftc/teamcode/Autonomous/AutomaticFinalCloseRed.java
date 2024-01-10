@@ -54,6 +54,8 @@ public class AutomaticFinalCloseRed extends LinearOpMode {
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
                         motorController.masterMotorRotate(this, -1.5,-1.5,-1.5,-1.5);
+                        motorController.masterMotorRotate(this, -1.7,-1.7,-1.7,-1.7);
+                        motorController.masterMotorRotate(this, 1.7,-1.7,1.7,-1.7);
                         break;
                     case "left":
                         motorController.masterMotorRotate(this, 2,2,2,2);
