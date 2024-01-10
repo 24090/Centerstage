@@ -75,7 +75,7 @@ public class MotorController {
         double initialRotation = getMotorRotations(motor);
         while ((opMode.opModeIsActive()) && (Math.abs(getMotorRotations(motor) - initialRotation) < Math.abs(motorRotations)))
         {
-            motor.setPower(0.1 * Math.signum(motorRotations));
+            motor.setPower(0.2 * Math.signum(motorRotations));
         }
         motor.setPower(0);
     }
