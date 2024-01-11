@@ -9,16 +9,27 @@ public class Controlled extends OpMode {
     boolean isTurning;
     double velocity;
     double velocity2;
+    int i;
 
     @Override
     public void init() {
         motorController1.init(hardwareMap);
-        motorController1.servo2SetPosition(0.23);
+        motorController1.servo1SetPosition(0.23);
     }
 
     @Override
     public void loop() {
         motorController1.setPowerByVector(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        if (gamepad1.left_bumper){
+            if (i==1){
+                motorController1.servo1SetPosition(0.23);
+                i=0;
+            }
+            if (i==0){
+                motorController1.servo1SetPosition(0.9);
+                i=1;
+            }
+        }
     }
 }
 
