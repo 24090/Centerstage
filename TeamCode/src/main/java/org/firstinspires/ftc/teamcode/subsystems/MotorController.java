@@ -82,10 +82,14 @@ public class MotorController {
         motor.setPower(0);
     }
     public void masterMotorControl(double[] motorPowers){
-        motor1.setPower(motorPowers[0]);
-        motor2.setPower(motorPowers[1]);
+        motor1.setPower(-motorPowers[0]);
+        motor2.setPower(-motorPowers[1]);
         motor3.setPower(motorPowers[2]);
         motor4.setPower(motorPowers[3]);
+    }
+    public void masterMotorControl(double motor1, double motor2, double motor3, double motor4){
+        masterMotorControl(new double[]{motor1, motor2, motor3, motor4});
+
     }
     public void setPowerByVector(double amount_forward, double amount_sideways, double amount_turn){
         masterMotorControl(getPowersFromVector(amount_forward, amount_sideways, amount_turn));
@@ -93,7 +97,7 @@ public class MotorController {
     public double[] getPowersFromVector(double amount_forward, double amount_sideways, double amount_turn){
         double RightwardPower = amount_forward + amount_sideways;
         double LeftwardPower = amount_forward - amount_sideways;
-        double denominator = Math.max(Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn), 1) * 10;
-        return new double[] {(LeftwardPower + amount_turn)/denominator, (RightwardPower + amount_turn)/denominator, (RightwardPower - amount_turn)/denominator, (LeftwardPower - amount_turn)/denominator};
+        double denominator = Math.max(Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn), 1) * 2;
+        return new double[] {(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator};
     }
 }

@@ -18,7 +18,7 @@ public class Controlled extends OpMode {
 
     @Override
     public void loop() {
-        motorController1.setPowerByVector(gamepad1.left_stick_x, gamepad1.right_stick_y, gamepad1.right_stick_x);
+        motorController1.setPowerByVector(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
     }
 }
 
