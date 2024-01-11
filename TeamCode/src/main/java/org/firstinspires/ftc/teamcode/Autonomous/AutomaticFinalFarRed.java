@@ -28,15 +28,15 @@ public class AutomaticFinalFarRed extends LinearOpMode {
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++){
                 telemetry.addData("Block", blocks[i].toString());
-                if ((130 < blocks[i].x && blocks[i].x < 180) && (150 < blocks[i].y && blocks[i].y < 200)) {
+                if ((100 < blocks[i].x && blocks[i].x < 180) && (120 < blocks[i].y && blocks[i].y < 200)) {
                     positionOfPixel = "middle";
                     telemetry.addData("Position", positionOfPixel);
                 }
-                if ((260 < blocks[i].x && blocks[i].x < 310) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                if ((260 < blocks[i].x && blocks[i].x < 310) && (160 < blocks[i].y && blocks[i].y < 200)) {
                     positionOfPixel = "right";
                     telemetry.addData("Position", positionOfPixel);
                 }
-                if ((10 < blocks[i].x && blocks[i].x < 50) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                if ((10 < blocks[i].x && blocks[i].x < 80) && (160 < blocks[i].y && blocks[i].y < 200)) {
                     positionOfPixel = "left";
                     telemetry.addData("Position", positionOfPixel);
                 }
@@ -51,7 +51,10 @@ public class AutomaticFinalFarRed extends LinearOpMode {
                         motorController.masterMotorRotate(this, 2.7,2.7,2.7,2.7);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.masterMotorRotate(this, -1.5,-1.5,-1.5,-1.5);
+                        motorController.masterMotorRotate(this, -0.5,-0.5,-0.5,-0.5);
+                        motorController.masterMotorRotate(this, 1.7,-1.7,1.7,-1.7);
+                        motorController.masterMotorRotate(this, 1.7,1.7,1.7,1.7);
+                        motorController.masterMotorRotate(this, 7,-7,7,-7);
                         break;
                     case "left":
                         motorController.masterMotorRotate(this, 2.3,2.3,2.3,2.3);
@@ -60,6 +63,9 @@ public class AutomaticFinalFarRed extends LinearOpMode {
                         sleep(800);
                         motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
                         motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this, 2.2,-2.2,2.2,-2.2);
+                        motorController.masterMotorRotate(this, -7.0,-7.0,-7.0,-7.0);
+                        motorController.masterMotorRotate(this, -0.5,0.5,-0.5,0.5);
                         break;
                     case "right":
                         motorController.masterMotorRotate(this, 2,2,2,2);
@@ -68,6 +74,9 @@ public class AutomaticFinalFarRed extends LinearOpMode {
                         sleep(800);
                         motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
                         motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this, -2.2,2.2,-2.2,2.2);
+                        motorController.masterMotorRotate(this, 7.0,7.0,7.0,7.0);
+                        motorController.masterMotorRotate(this, 0.5,-0.5,0.5,-0.5);
                         break;
                 }
             }

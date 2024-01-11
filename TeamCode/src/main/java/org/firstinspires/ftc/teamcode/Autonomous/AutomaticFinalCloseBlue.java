@@ -62,6 +62,8 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         sleep(800);
                         motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
                         motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this, 2.2,-2.2,2.2,-2.2);
+                        motorController.masterMotorRotate(this, 3.5,3.5,3.5,3.5);
                         break;
                     case "right":
                         motorController.masterMotorRotate(this, 2,2,2,2);
@@ -70,6 +72,8 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         sleep(800);
                         motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
                         motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this, -2.2,2.2,-2.2,2.2);
+                        motorController.masterMotorRotate(this, -3.5,-3.5,-3.5,-3.5);
                         break;
                 }
             }
