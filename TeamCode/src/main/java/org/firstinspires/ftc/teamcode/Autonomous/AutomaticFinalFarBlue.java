@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
+
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
 
+
 @Autonomous()
-public class AutomaticLeft extends LinearOpMode {
+public class AutomaticFinalFarBlue extends LinearOpMode {
     MotorController motorController;
     private String positionOfPixel = "";
     HuskyLens huskyLens;
@@ -27,7 +30,7 @@ public class AutomaticLeft extends LinearOpMode {
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++){
                 telemetry.addData("Block", blocks[i].toString());
-                if ((130 < blocks[i].x && blocks[i].x < 180) && (140 < blocks[i].y && blocks[i].y < 200)) {
+                if ((130 < blocks[i].x && blocks[i].x < 180) && (150 < blocks[i].y && blocks[i].y < 200)) {
                     positionOfPixel = "middle";
                     telemetry.addData("Position", positionOfPixel);
                 }
@@ -43,30 +46,40 @@ public class AutomaticLeft extends LinearOpMode {
             telemetry.update();
             }
             if (opModeIsActive()){
-                motorController.servoSetPosition(0.23);
+                motorController.servo1SetPosition(0.23);
                 sleep(800);
                 switch (positionOfPixel){
                     case "middle":
-                        motorController.motorMasterRotate("front",2.7,2.7,2.7,2.7);
-                        motorController.servoSetPosition(0.65);
+                        motorController.masterMotorRotate(this, 2.7,2.7,2.7,2.7);
+                        motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.motorMasterRotate("back",1.5,1.5,1.5,1.5);
+                        motorController.masterMotorRotate(this, -0.5,-0.5,-0.5,-0.5);
+                        motorController.masterMotorRotate(this, -1.7,1.7,-1.7,1.7);
+                        motorController.masterMotorRotate(this, 1.7,1.7,1.7,1.7);
+                        motorController.masterMotorRotate(this, -7,7,-7,7);
                         break;
                     case "left":
-                        motorController.motorMasterRotate("front",2.3,2.3,2.3,2.3);
-                        motorController.motorMasterRotate("rotateLeft",1.4,1.4,1.4,1.4);
-                        motorController.motorMasterRotate("front",0.6,0.6,0.6,0.6);
-                        motorController.servoSetPosition(0.65);
+                        motorController.masterMotorRotate(this, 2,2,2,2);
+                        motorController.masterMotorRotate(this,1.5, 1.5, -1.5,-1.5);
+                        motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.motorMasterRotate("back",0.8,0.8,0.8,0.8);
+                        motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
+                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this, -2.2,2.2,-2.2,2.2);
+                        motorController.masterMotorRotate(this, 7.0,7.0,7.0,7.0);
+                        motorController.masterMotorRotate(this, 0.5,-0.5,0.5,-0.5);
                         break;
                     case "right":
-                        motorController.motorMasterRotate("front",2,2,2,2);
-                        motorController.motorMasterRotate("rotateRight",1.4,1.4,1.4,1.4);
-                        motorController.motorMasterRotate("front",0.6,0.6,0.6,0.6);
-                        motorController.servoSetPosition(0.65);
+                        motorController.masterMotorRotate(this, 2.3,2.3,2.3,2.3);
+                        motorController.masterMotorRotate(this,-1.5, -1.5, 1.5,1.5);
+                        motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.motorMasterRotate("back",0.6,0.6,0.6,0.6);
+                        motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
+                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this, 2.2,-2.2,2.2,-2.2);
+                        motorController.masterMotorRotate(this, -7.0,-7.0,-7.0,-7.0);
+                        motorController.masterMotorRotate(this, -0.5,0.5,-0.5,0.5);
+                        break;
                 }
             }
         }
