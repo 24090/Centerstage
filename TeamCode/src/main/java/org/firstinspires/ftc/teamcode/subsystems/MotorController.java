@@ -12,15 +12,11 @@ public class MotorController {
     public DcMotor motor3;
     public DcMotor motor4;
     private Servo servo1;
-    private Servo servo2;
     double ticksPerRotation;
-    boolean startRotation;
 
     public void init(HardwareMap hwMap){
         servo1 = hwMap.get(Servo.class, "servo");
         servo1.setDirection(Servo.Direction.FORWARD);
-        servo2 = hwMap.get(Servo.class, "servo2");
-        servo2.setDirection(Servo.Direction.FORWARD);
         motor1 = hwMap.get(DcMotor.class, "motor1");
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -41,9 +37,6 @@ public class MotorController {
     }
     public void servo1SetPosition(double position){
         servo1.setPosition(position);
-    }
-    public void servo2SetPosition(double position){
-        servo2.setPosition(position);
     }
     public double getMotorRotations(DcMotor motor){
         return TicksToRotations(motor.getCurrentPosition());

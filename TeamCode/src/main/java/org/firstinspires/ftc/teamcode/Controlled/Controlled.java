@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.Controlled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.subsystems.Conversions;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
 @TeleOp()
 public class Controlled extends OpMode {
     MotorController motorController1 = new MotorController();
-    String turningDirection;
-    boolean isTurning;
-    double velocity;
-    double velocity2;
-    int i = 0;
 
     @Override
     public void init() {
