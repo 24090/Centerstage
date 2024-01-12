@@ -56,7 +56,7 @@ public class MotorController {
     }
     //function without power input
     public void masterMotorRotate(LinearOpMode opMode, double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
-        masterMotorRotate(opMode, new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{0.1, 0.1, 0.1, 0.1});
+        masterMotorRotate(opMode, new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{0.2, 0.2, 0.2, 0.2});
     }
     //function with power input
     public void masterMotorRotate(LinearOpMode opMode, double[] motorRotations, double[] motorPowers) {
