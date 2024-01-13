@@ -11,12 +11,17 @@ public class MotorController {
     public DcMotor motor2;
     public DcMotor motor3;
     public DcMotor motor4;
+    public DcMotor autoMotor;
+    public DcMotor linearMotor;
     private Servo servo1;
+    private Servo servo2;
     double ticksPerRotation;
 
     public void init(HardwareMap hwMap){
         servo1 = hwMap.get(Servo.class, "servo");
         servo1.setDirection(Servo.Direction.FORWARD);
+        servo2 = hwMap.get(Servo.class, "servo2");
+        servo2.setDirection(Servo.Direction.REVERSE);
         motor1 = hwMap.get(DcMotor.class, "motor1");
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -33,10 +38,21 @@ public class MotorController {
         motor4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor4.setDirection(DcMotorSimple.Direction.FORWARD);
+        autoMotor = hwMap.get(DcMotor.class, "automotor");
+        autoMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        autoMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        autoMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        linearMotor = hwMap.get(DcMotor.class, "linearmotor");
+        linearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         ticksPerRotation = motor1.getMotorType().getTicksPerRev();
     }
     public void servo1SetPosition(double position){
         servo1.setPosition(position);
+    }
+    public void servo2SetPosition(double position){
+        servo2.setPosition(position);
     }
     public double getMotorRotations(DcMotor motor){
         return TicksToRotations(motor.getCurrentPosition());
@@ -79,6 +95,12 @@ public class MotorController {
         motor2.setPower(-motorPowers[1]);
         motor3.setPower(motorPowers[2]);
         motor4.setPower(motorPowers[3]);
+    }
+    public void automotor(double speed){
+        autoMotor.setPower(speed);
+    }
+    public void linearMotor(double speed){
+        linearMotor.setPower(speed);
     }
     public void masterMotorControl(double motor1, double motor2, double motor3, double motor4){
         masterMotorControl(new double[]{motor1, motor2, motor3, motor4});

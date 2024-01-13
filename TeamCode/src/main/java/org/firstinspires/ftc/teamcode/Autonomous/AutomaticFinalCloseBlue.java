@@ -30,17 +30,19 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++){
                 telemetry.addData("Block", blocks[i].toString());
-                if ((130 < blocks[i].x && blocks[i].x < 180) && (150 < blocks[i].y && blocks[i].y < 200)) {
-                    positionOfPixel = "middle";
-                    telemetry.addData("Position", positionOfPixel);
-                }
-                if ((260 < blocks[i].x && blocks[i].x < 310) && (180 < blocks[i].y && blocks[i].y < 200)) {
-                    positionOfPixel = "right";
-                    telemetry.addData("Position", positionOfPixel);
-                }
-                if ((10 < blocks[i].x && blocks[i].x < 50) && (180 < blocks[i].y && blocks[i].y < 200)) {
-                    positionOfPixel = "left";
-                    telemetry.addData("Position", positionOfPixel);
+                if (blocks[i].id == 2) {
+                    if ((130 < blocks[i].x && blocks[i].x < 180) && (150 < blocks[i].y && blocks[i].y < 200)) {
+                        positionOfPixel = "middle";
+                        telemetry.addData("Position", positionOfPixel);
+                    }
+                    if ((260 < blocks[i].x && blocks[i].x < 310) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                        positionOfPixel = "right";
+                        telemetry.addData("Position", positionOfPixel);
+                    }
+                    if ((10 < blocks[i].x && blocks[i].x < 50) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                        positionOfPixel = "left";
+                        telemetry.addData("Position", positionOfPixel);
+                    }
                 }
             }
             telemetry.update();
@@ -53,17 +55,37 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         motorController.masterMotorRotate(this, 2.7,2.7,2.7,2.7);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.masterMotorRotate(this, -1.5,-1.5,-1.5,-1.5);
+                        motorController.automotor(-0.5);
+                        sleep(800);
+                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this, -1.5,-1.5,1.5,1.5);
+                        motorController.masterMotorRotate(this, -3.0,-3.0,-3.0,-3.0);
+                        motorController.masterMotorRotate(this, 0.3,-0.3,0.3,-0.3);
+                        motorController.servo2SetPosition(0.9);
+                        sleep(800);
+                        motorController.automotor(0.2);
+                        sleep(800);
                         break;
                     case "left":
                         motorController.masterMotorRotate(this, 2.3,2.3,2.3,2.3);
                         motorController.masterMotorRotate(this,1.5, 1.5, -1.5,-1.5);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
-                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
-                        motorController.masterMotorRotate(this, 2.2,-2.2,2.2,-2.2);
-                        motorController.masterMotorRotate(this, 3.5,3.5,3.5,3.5);
+                        motorController.masterMotorRotate(this, 0.6,0.6,0.6,0.6);
+                        motorController.masterMotorRotate(this, -0.5,-0.5,-0.5,-0.5);
+                        motorController.masterMotorRotate(this, -0.7,0.7,-0.7,0.7);
+                        motorController.masterMotorRotate(this, 0.5,0.5,0.5,0.5);
+                        motorController.masterMotorRotate(this, -0.4,0.4,-0.4,0.4);
+                        motorController.masterMotorRotate(this, 1.0,1.0,1.0,1.0);
+                        motorController.masterMotorRotate(this,-3.0, -3.0, 3.0,3.0);
+                        motorController.automotor(-0.5);
+                        sleep(800);
+                        motorController.masterMotorRotate(this,0.1, 0.1, -0.1,-0.1);
+                        motorController.masterMotorRotate(this, -1.2,-1.2,-1.2,-1.2);
+                        motorController.servo2SetPosition(0.9);
+                        sleep(800);
+                        motorController.automotor(0.2);
+                        sleep(800);
                         break;
                     case "right":
                         motorController.masterMotorRotate(this, 2,2,2,2);
@@ -71,9 +93,14 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
                         motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
-                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
-                        motorController.masterMotorRotate(this, -2.2,2.2,-2.2,2.2);
+                        motorController.automotor(-0.5);
+                        sleep(800);
+                        motorController.masterMotorRotate(this,0.1, 0.1, -0.1,-0.1);
                         motorController.masterMotorRotate(this, -3.5,-3.5,-3.5,-3.5);
+                        motorController.servo2SetPosition(0.9);
+                        sleep(800);
+                        motorController.automotor(0.2);
+                        sleep(800);
                         break;
                 }
             }
