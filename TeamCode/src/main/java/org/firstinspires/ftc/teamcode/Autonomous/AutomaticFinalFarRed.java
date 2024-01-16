@@ -23,25 +23,27 @@ public class AutomaticFinalFarRed extends LinearOpMode {
         motorController = new MotorController();
         motorController.init(hardwareMap);
         telemetry.update();
-        waitForStart();
         while (opModeIsActive() && positionOfPixel == "") {
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++){
                 telemetry.addData("Block", blocks[i].toString());
-                if ((100 < blocks[i].x && blocks[i].x < 180) && (120 < blocks[i].y && blocks[i].y < 200)) {
-                    positionOfPixel = "middle";
-                    telemetry.addData("Position", positionOfPixel);
-                }
-                if ((260 < blocks[i].x && blocks[i].x < 310) && (160 < blocks[i].y && blocks[i].y < 200)) {
-                    positionOfPixel = "right";
-                    telemetry.addData("Position", positionOfPixel);
-                }
-                if ((10 < blocks[i].x && blocks[i].x < 80) && (160 < blocks[i].y && blocks[i].y < 200)) {
-                    positionOfPixel = "left";
-                    telemetry.addData("Position", positionOfPixel);
+                if (blocks[i].id == 1) {
+                    if ((130 < blocks[i].x && blocks[i].x < 180) && (150 < blocks[i].y && blocks[i].y < 200)) {
+                        positionOfPixel = "middle";
+                        telemetry.addData("Position", positionOfPixel);
+                    }
+                    if ((260 < blocks[i].x && blocks[i].x < 310) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                        positionOfPixel = "right";
+                        telemetry.addData("Position", positionOfPixel);
+                    }
+                    if ((10 < blocks[i].x && blocks[i].x < 50) && (180 < blocks[i].y && blocks[i].y < 200)) {
+                        positionOfPixel = "left";
+                        telemetry.addData("Position", positionOfPixel);
+                    }
                 }
             }
             telemetry.update();
+        waitForStart();
             }
             if (opModeIsActive()){
                 motorController.servo1SetPosition(0.23);
