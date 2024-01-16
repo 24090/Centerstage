@@ -24,19 +24,19 @@ public class MotorController {
         servo2.setDirection(Servo.Direction.REVERSE);
         motor1 = hwMap.get(DcMotor.class, "motor1");
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor1.setDirection(DcMotorSimple.Direction.FORWARD);
         motor2 = hwMap.get(DcMotor.class, "motor2");
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor2.setDirection(DcMotorSimple.Direction.FORWARD);
         motor3 = hwMap.get(DcMotor.class, "motor3");
         motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor3.setDirection(DcMotorSimple.Direction.FORWARD);
         motor4 = hwMap.get(DcMotor.class, "motor4");
         motor4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor4.setDirection(DcMotorSimple.Direction.FORWARD);
         autoMotor = hwMap.get(DcMotor.class, "automotor");
         autoMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -65,7 +65,7 @@ public class MotorController {
     }
     //function without power input
     public void masterMotorRotate(LinearOpMode opMode, double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
-        masterMotorRotate(opMode, new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{0.2, 0.2, 0.2, 0.2});
+        masterMotorRotate(opMode, new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{1.0, 1.0, 1.0, 1.0});
     }
     //function with power input
     public void masterMotorRotate(LinearOpMode opMode, double[] motorRotations, double[] motorPowers) {

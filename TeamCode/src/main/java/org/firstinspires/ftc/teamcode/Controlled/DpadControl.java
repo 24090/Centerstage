@@ -31,5 +31,8 @@ public class DpadControl extends OpMode{
         } else {
             motorController.linearMotor(0.0);
         }
+        if (gamepad1.x){
+            motorController.automotor(0.5);
+        }
     }
 }

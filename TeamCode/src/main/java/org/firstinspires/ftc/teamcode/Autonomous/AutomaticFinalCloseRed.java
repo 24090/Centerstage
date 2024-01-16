@@ -30,7 +30,7 @@ public class AutomaticFinalCloseRed extends LinearOpMode {
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++){
                 telemetry.addData("Block", blocks[i].toString());
-                if (blocks[i].id == 2) {
+                if (blocks[i].id == 1) {
                     if ((130 < blocks[i].x && blocks[i].x < 180) && (150 < blocks[i].y && blocks[i].y < 200)) {
                         positionOfPixel = "middle";
                         telemetry.addData("Position", positionOfPixel);
@@ -55,12 +55,14 @@ public class AutomaticFinalCloseRed extends LinearOpMode {
                         motorController.masterMotorRotate(this, 2.7,2.7,2.7,2.7);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
+                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
                         motorController.automotor(-0.5);
                         sleep(800);
-                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(this,0.1, 0.1, -0.1,-0.1);
                         motorController.masterMotorRotate(this, 1.5,1.5,-1.5,-1.5);
-                        motorController.masterMotorRotate(this, -3.0,-3.0,-3.0,-3.0);
-                        motorController.masterMotorRotate(this, -0.3,0.3,-0.3,0.3);
+                        motorController.masterMotorRotate(this, -2.3,-2.3,-2.3,-2.3);
+                        motorController.masterMotorRotate(this, -0.1,0.1,-0.1,0.1);
+                        motorController.masterMotorRotate(this, -1.3,-1.3,-1.3,-1.3);
                         motorController.servo2SetPosition(0.9);
                         sleep(800);
                         motorController.automotor(0.2);
@@ -71,11 +73,11 @@ public class AutomaticFinalCloseRed extends LinearOpMode {
                         motorController.masterMotorRotate(this,1.5, 1.5, -1.5,-1.5);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
+                        motorController.masterMotorRotate(this, 0.4,0.4,0.4,0.4);
                         motorController.automotor(-0.5);
                         sleep(800);
                         motorController.masterMotorRotate(this,0.1, 0.1, -0.1,-0.1);
-                        motorController.masterMotorRotate(this, -3.5,-3.5,-3.5,-3.5);
+                        motorController.masterMotorRotate(this, -3.9,-3.9,-3.9,-3.9);
                         motorController.servo2SetPosition(0.9);
                         sleep(800);
                         motorController.automotor(0.2);

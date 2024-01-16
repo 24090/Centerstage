@@ -54,9 +54,8 @@ public class AutomaticFinalFarBlue extends LinearOpMode {
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
                         motorController.masterMotorRotate(this, -0.5,-0.5,-0.5,-0.5);
-                        motorController.masterMotorRotate(this, -1.7,1.7,-1.7,1.7);
-                        motorController.masterMotorRotate(this, 1.7,1.7,1.7,1.7);
-                        motorController.masterMotorRotate(this, -7,7,-7,7);
+                        motorController.masterMotorRotate(this, 2.15,-2.15,2.15,-2.15);
+                        motorController.masterMotorRotate(this, 2.0,2.0,2.0,2.0);
                         break;
                     case "left":
                         motorController.masterMotorRotate(this, 2,2,2,2);
@@ -66,8 +65,6 @@ public class AutomaticFinalFarBlue extends LinearOpMode {
                         motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
                         motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
                         motorController.masterMotorRotate(this, -2.2,2.2,-2.2,2.2);
-                        motorController.masterMotorRotate(this, 7.0,7.0,7.0,7.0);
-                        motorController.masterMotorRotate(this, 0.5,-0.5,0.5,-0.5);
                         break;
                     case "right":
                         motorController.masterMotorRotate(this, 2.3,2.3,2.3,2.3);
@@ -77,8 +74,6 @@ public class AutomaticFinalFarBlue extends LinearOpMode {
                         motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
                         motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
                         motorController.masterMotorRotate(this, 2.2,-2.2,2.2,-2.2);
-                        motorController.masterMotorRotate(this, -7.0,-7.0,-7.0,-7.0);
-                        motorController.masterMotorRotate(this, -0.5,0.5,-0.5,0.5);
                         break;
                 }
             }
