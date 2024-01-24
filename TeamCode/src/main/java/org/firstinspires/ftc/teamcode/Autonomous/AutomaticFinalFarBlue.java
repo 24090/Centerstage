@@ -22,7 +22,7 @@ public class AutomaticFinalFarBlue extends LinearOpMode {
             telemetry.addData(">>", "Press start to continue");
         }
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
-        motorController = new MotorController();
+        motorController = new MotorController(this);
         motorController.init(hardwareMap);
         telemetry.update();
         while (opModeIsActive() && positionOfPixel == "") {
@@ -52,30 +52,30 @@ public class AutomaticFinalFarBlue extends LinearOpMode {
                 sleep(800);
                 switch (positionOfPixel){
                     case "middle":
-                        motorController.masterMotorRotate(this, 2.7,2.7,2.7,2.7);
+                        motorController.masterMotorRotate(2.7,2.7,2.7,2.7);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.masterMotorRotate(this, -0.5,-0.5,-0.5,-0.5);
-                        motorController.masterMotorRotate(this, 2.15,-2.15,2.15,-2.15);
-                        motorController.masterMotorRotate(this, 2.0,2.0,2.0,2.0);
+                        motorController.masterMotorRotate(-0.5,-0.5,-0.5,-0.5);
+                        motorController.masterMotorRotate(2.15,-2.15,2.15,-2.15);
+                        motorController.masterMotorRotate(2.0,2.0,2.0,2.0);
                         break;
                     case "left":
-                        motorController.masterMotorRotate(this, 2,2,2,2);
-                        motorController.masterMotorRotate(this,1.5, 1.5, -1.5,-1.5);
+                        motorController.masterMotorRotate(2,2,2,2);
+                        motorController.masterMotorRotate(1.5, 1.5, -1.5,-1.5);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
-                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
-                        motorController.masterMotorRotate(this, -2.2,2.2,-2.2,2.2);
+                        motorController.masterMotorRotate(0.7,0.7,0.7,0.7);
+                        motorController.masterMotorRotate(-0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(-2.2,2.2,-2.2,2.2);
                         break;
                     case "right":
-                        motorController.masterMotorRotate(this, 2.3,2.3,2.3,2.3);
-                        motorController.masterMotorRotate(this,-1.5, -1.5, 1.5,1.5);
+                        motorController.masterMotorRotate(2.3,2.3,2.3,2.3);
+                        motorController.masterMotorRotate(-1.5, -1.5, 1.5,1.5);
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
-                        motorController.masterMotorRotate(this, 0.7,0.7,0.7,0.7);
-                        motorController.masterMotorRotate(this, -0.7,-0.7,-0.7,-0.7);
-                        motorController.masterMotorRotate(this, 2.2,-2.2,2.2,-2.2);
+                        motorController.masterMotorRotate(0.7,0.7,0.7,0.7);
+                        motorController.masterMotorRotate(-0.7,-0.7,-0.7,-0.7);
+                        motorController.masterMotorRotate(2.2,-2.2,2.2,-2.2);
                         break;
                 }
             }

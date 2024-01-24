@@ -15,6 +15,7 @@ public class MotorController {
     public DcMotor linearMotor;
     private Servo servo1;
     private Servo servo2;
+    LinearOpMode opMode;
     double ticksPerRotation;
 
     public void init(HardwareMap hwMap){
@@ -48,6 +49,9 @@ public class MotorController {
         linearMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         ticksPerRotation = motor1.getMotorType().getTicksPerRev();
     }
+    public MotorController(LinearOpMode opMode1){
+        opMode = opMode1;
+    }
     public void servo1SetPosition(double position){
         servo1.setPosition(position);
     }
@@ -64,17 +68,20 @@ public class MotorController {
         return rotations * (0.2*ticksPerRotation);
     }
     //function without power input
-    public void masterMotorRotate(LinearOpMode opMode, double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
-        masterMotorRotate(opMode, new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{1.0, 1.0, 1.0, 1.0});
+    public void masterMotorRotate(double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
+        masterMotorRotate(new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{1.0, 1.0, 1.0, 1.0});
+    }
+    public int getTicks(DcMotor motor){
+        return motor.getCurrentPosition();
     }
     //function with power input
-    public void masterMotorRotate(LinearOpMode opMode, double[] motorRotations, double[] motorPowers) {
+    public void masterMotorRotate(double[] motorRotations, double[] motorPowers) {
         // create threads for each motor and run them
 
-        Thread motorThread1 = new Thread(() -> {rotateMotor(opMode,motorRotations[0], motorPowers[0], motor1);});
-        Thread motorThread2 = new Thread(() -> {rotateMotor(opMode,motorRotations[1], motorPowers[1],motor2);});
-        Thread motorThread3 = new Thread(() -> {rotateMotor(opMode,-motorRotations[2], motorPowers[2], motor3);});
-        Thread motorThread4 = new Thread(() -> {rotateMotor(opMode,-motorRotations[3], motorPowers[3], motor4);});
+        Thread motorThread1 = new Thread(() -> {rotateMotor(motorRotations[0], motorPowers[0], motor1);});
+        Thread motorThread2 = new Thread(() -> {rotateMotor(motorRotations[1], motorPowers[1],motor2);});
+        Thread motorThread3 = new Thread(() -> {rotateMotor(-motorRotations[2], motorPowers[2], motor3);});
+        Thread motorThread4 = new Thread(() -> {rotateMotor(-motorRotations[3], motorPowers[3], motor4);});
         motorThread1.start();
         motorThread2.start();
         motorThread3.start();
@@ -82,7 +89,7 @@ public class MotorController {
         // wait until threads are done executing
         while (motorThread1.isAlive()||motorThread2.isAlive()||motorThread3.isAlive()||motorThread4.isAlive()){;}
     }
-    public void rotateMotor(LinearOpMode opMode, double motorRotations, double motorPower, DcMotor motor){
+    public void rotateMotor(double motorRotations, double motorPower, DcMotor motor){
         double initialRotation = getMotorRotations(motor);
         while ((opMode.opModeIsActive()) && (Math.abs(getMotorRotations(motor) - initialRotation) < Math.abs(motorRotations)))
         {
@@ -112,9 +119,16 @@ public class MotorController {
     public double[] getPowersFromVector(double amount_forward, double amount_sideways, double amount_turn){
         double RightwardPower = amount_forward + amount_sideways;
         double LeftwardPower = amount_forward - amount_sideways;
-        double denominator = (Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn)) * 2;
+        double denominator = (Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn));
         return (denominator != 0
                 ?new double[]{(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator}
                 :new double[]{0,0,0,0});
+    }
+    public void moveByVector(double x, double y){
+
+
+    }
+    public void turnByDegrees(){
+
     }
 }
