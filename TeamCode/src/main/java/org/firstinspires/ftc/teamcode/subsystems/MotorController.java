@@ -12,6 +12,8 @@ public class MotorController {
     public DcMotor motor3;
     public DcMotor motor4;
     DcMotor[] motorList = {motor1,motor2,motor3,motor4};
+    double lengthBetweenEncodersVertically;
+    double lengthBetweenEncodersHorizontally;
     public DcMotor autoMotor;
     public DcMotor linearMotor;
     private Servo servo1;
@@ -121,12 +123,12 @@ public class MotorController {
                 ?new double[]{(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator}
                 :new double[]{0,0,0,0});
     }
-    public void moveByXYVector(double x, double y, double[] motorPowers){
+    public void moveByXYRobotOriented(double x, double y, double[] motorPowers){
         int i = 0;
         double initialRotation1 = positioning.getCentimetersTravelled(motor1);
         double initialRotation2 = positioning.getCentimetersTravelled(motor2);
         double initialRotation3 = positioning.getCentimetersTravelled(motor3);
-        while ((opMode.opModeIsActive()) && ((positioning.getCentimetersTravelled(motor1)-initialRotation1 < y)||(positioning.getCentimetersTravelled(motor3)-initialRotation3 < y)||(positioning.getCentimetersTravelled(motor2)-initialRotation2 < x))) {
+        while ((opMode.opModeIsActive()) && (((Math.abs(positioning.getCentimetersTravelled(motor1)-initialRotation1)) < y)||(Math.abs((positioning.getCentimetersTravelled(motor2)-initialRotation2)) < y)||(Math.abs((positioning.getCentimetersTravelled(motor3)-initialRotation3)) < x))){
             for (DcMotor motor: motorList) {
                 motor.setPower(getPowersFromVector(y,x,0)[i]);
             }
@@ -136,7 +138,24 @@ public class MotorController {
         }
     }
     //Robot Oriented, so it will not move to a position on the field, it will move by an x and y relative to the robot's heading (In cm).
-    public void turnByDegrees(){
-
-    }
+    public void turnByDegrees(double degree){
+        int i = 0;
+        double initialRotation1 = positioning.getCentimetersTravelled(motor1);
+        double initialRotation2 = positioning.getCentimetersTravelled(motor2);
+        double initialRotation3 = positioning.getCentimetersTravelled(motor3);
+        while ((opMode.opModeIsActive()) && ((Math.abs(positioning.getCentimetersTravelled(motor1)-initialRotation1) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(positioning.getCentimetersTravelled(motor2)-initialRotation2) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(positioning.getCentimetersTravelled(motor3)-initialRotation3) < degree*(lengthBetweenEncodersHorizontally/2)))){
+            for (DcMotor motor: motorList) {
+                if (i < 2){
+                    motor.setPower(-Math.signum(degree)*1);
+                    i++;
+                } else {
+                    motor.setPower(Math.signum(degree)*1);
+                    i++;
+                }
+            }
+        }
+        for (DcMotor motor: motorList) {
+            motor.setPower(0);
+            }
+        }
 }
