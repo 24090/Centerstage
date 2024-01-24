@@ -28,20 +28,25 @@ public class Positioning {
             changeVector = new double[]{tickToCMConstant * ((motorController.getTicks(motor1) + motorController.getTicks(motor2)) / 2), tickToCMConstant * (motorController.getTicks(motor3) - lengthBetweenEncodersHorizontally * ((motorController.getTicks(motor2) - motorController.getTicks(motor1)) / lengthBetweenEncodersVertically)), tickToCMConstant * ((motorController.getTicks(motor2) - motorController.getTicks(motor1)) / lengthBetweenEncodersVertically)};
             if (movements == 0){
                 heading = heading + changeVector[3];
-                currentPosition[1] = initialPosition[1] + changeVector[1];
-                currentPosition[2] = initialPosition[2] + changeVector[2];
+                currentPosition[1] = initialPosition[1] + Math.cos(heading)*changeVector[1] - Math.sin(heading)*changeVector[2];
+                currentPosition[2] = initialPosition[2] + Math.sin(heading)*changeVector[1] + Math.cos(heading)*changeVector[2];
                 movements++;
             } else {
                 heading = heading + changeVector[3];
-                currentPosition[1] = currentPosition[1] + changeVector[1];
-                currentPosition[2] = currentPosition[2] + changeVector[2];
+                currentPosition[1] = currentPosition[1] + Math.cos(heading)*changeVector[1] - Math.sin(heading)*changeVector[2];
+                currentPosition[2] = currentPosition[2] + Math.sin(heading)*changeVector[1] + Math.cos(heading)*changeVector[2];
+                movements++;
             }
         }
     }
     Thread positionUpdater = new Thread(() -> {updatePosition(opMode1);});
+    public void startPositionUpdater(){
+        positionUpdater.start();
+    }
+    public double getCentimetersTravelled(DcMotor motor) {
+        return motorController.getEncoderTicks(motor1) * tickToCMConstant;
+    }
     public double[] getPositionOnBoard(){
         return currentPosition;
     }
-
-
 }

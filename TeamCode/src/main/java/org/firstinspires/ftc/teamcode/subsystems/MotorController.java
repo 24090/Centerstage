@@ -11,11 +11,13 @@ public class MotorController {
     public DcMotor motor2;
     public DcMotor motor3;
     public DcMotor motor4;
+    DcMotor[] motorList = {motor1,motor2,motor3,motor4};
     public DcMotor autoMotor;
     public DcMotor linearMotor;
     private Servo servo1;
     private Servo servo2;
     LinearOpMode opMode;
+    Positioning positioning = new Positioning(null);
     double ticksPerRotation;
 
     public void init(HardwareMap hwMap){
@@ -61,13 +63,12 @@ public class MotorController {
     public double getMotorRotations(DcMotor motor){
         return TicksToRotations(motor.getCurrentPosition());
     }
+    public double getEncoderTicks(DcMotor motor){
+        return motor.getCurrentPosition();
+    }
     public double TicksToRotations(double ticks){
         return ticks/(0.2*ticksPerRotation);
     }
-    public double RotationsToTicks(double rotations){
-        return rotations * (0.2*ticksPerRotation);
-    }
-    //function without power input
     public void masterMotorRotate(double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
         masterMotorRotate(new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{1.0, 1.0, 1.0, 1.0});
     }
@@ -103,15 +104,11 @@ public class MotorController {
         motor3.setPower(motorPowers[2]);
         motor4.setPower(motorPowers[3]);
     }
-    public void automotor(double speed){
+    public void autoMotor(double speed){
         autoMotor.setPower(speed);
     }
     public void linearMotor(double speed){
         linearMotor.setPower(speed);
-    }
-    public void masterMotorControl(double motor1, double motor2, double motor3, double motor4){
-        masterMotorControl(new double[]{motor1, motor2, motor3, motor4});
-
     }
     public void setPowerByVector(double amount_forward, double amount_sideways, double amount_turn){
         masterMotorControl(getPowersFromVector(amount_forward, amount_sideways, amount_turn));
@@ -124,10 +121,21 @@ public class MotorController {
                 ?new double[]{(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator}
                 :new double[]{0,0,0,0});
     }
-    public void moveByVector(double x, double y){
-
-
+    public void moveByXYVector(double x, double y, double[] motorPowers){
+        int i = 0;
+        double initialRotation1 = positioning.getCentimetersTravelled(motor1);
+        double initialRotation2 = positioning.getCentimetersTravelled(motor2);
+        double initialRotation3 = positioning.getCentimetersTravelled(motor3);
+        while ((opMode.opModeIsActive()) && ((positioning.getCentimetersTravelled(motor1)-initialRotation1 < y)||(positioning.getCentimetersTravelled(motor3)-initialRotation3 < y)||(positioning.getCentimetersTravelled(motor2)-initialRotation2 < x))) {
+            for (DcMotor motor: motorList) {
+                motor.setPower(getPowersFromVector(y,x,0)[i]);
+            }
+        }
+        for (DcMotor motor: motorList) {
+            motor.setPower(0);
+        }
     }
+    //Robot Oriented, so it will not move to a position on the field, it will move by an x and y relative to the robot's heading (In cm).
     public void turnByDegrees(){
 
     }

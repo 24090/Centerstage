@@ -32,7 +32,7 @@ public class DpadControl extends LinearOpMode{
                 motorController.linearMotor(0.0);
             }
             if (gamepad1.x){
-                motorController.automotor(0.5);
+                motorController.autoMotor(0.5);
             }
         }
     }
