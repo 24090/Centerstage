@@ -5,11 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
+import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 
 
 @Autonomous()
 public class AutomaticFinalFarBlue extends LinearOpMode {
     MotorController motorController;
+    Positioning positioning;
     private String positionOfPixel = "";
     HuskyLens huskyLens;
     boolean autoComplete = false;
@@ -23,6 +25,8 @@ public class AutomaticFinalFarBlue extends LinearOpMode {
         }
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
         motorController = new MotorController(this);
+        positioning = new Positioning(this);
+        positioning.startPositionUpdater();
         motorController.init(hardwareMap);
         telemetry.update();
         while (opModeIsActive() && positionOfPixel == "") {

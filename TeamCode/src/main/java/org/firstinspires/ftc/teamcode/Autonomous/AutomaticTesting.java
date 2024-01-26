@@ -5,16 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
+import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 
 
 @Autonomous()
 public class AutomaticTesting extends LinearOpMode {
     MotorController motorController;
+    Positioning positioning;
     private String positionOfPixel = "";
     HuskyLens huskyLens;
     boolean autoComplete = false;
     @Override
     public void runOpMode() {
+        positioning = new Positioning(this);
+        motorController = new MotorController(this);
         while (positionOfPixel == ""){
             if (gamepad1.left_bumper) {
                 positionOfPixel = "left";
