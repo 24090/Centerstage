@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Controlled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.teamcode.subsystems.Conversions;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
 @TeleOp()
@@ -14,6 +13,7 @@ public class DpadControl extends LinearOpMode{
     public void runOpMode(){
         motorController = new MotorController(this);
         motorController.init(hardwareMap);
+        waitForStart();
         while(opModeIsActive()){
             verticalDirection = (converter.booleanToDouble(gamepad1.dpad_up) - converter.booleanToDouble(gamepad1.dpad_down));
             horizontalDirection = (converter.booleanToDouble(gamepad1.dpad_right) - converter.booleanToDouble(gamepad1.dpad_left));
@@ -23,16 +23,6 @@ public class DpadControl extends LinearOpMode{
             }
             if (gamepad1.right_bumper){
                 motorController.servo1SetPosition(0.9);
-            }
-            if (gamepad1.b){
-                motorController.linearMotor(1.0);
-            } else if (gamepad1.a) {
-                motorController.linearMotor(-1.0);
-            } else {
-                motorController.linearMotor(0.0);
-            }
-            if (gamepad1.x){
-                motorController.autoMotor(0.5);
             }
         }
     }

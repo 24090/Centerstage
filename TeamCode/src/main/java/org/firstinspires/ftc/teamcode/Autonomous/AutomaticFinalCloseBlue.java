@@ -59,14 +59,12 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
                         motorController.masterMotorRotate(-0.7,-0.7,-0.7,-0.7);
-                        motorController.autoMotor(-0.5);
                         sleep(800);
                         motorController.masterMotorRotate(-1.3,-1.3,1.3,1.3);
                         motorController.masterMotorRotate(-2.3,-2.3,-2.3,-2.3);
                         motorController.masterMotorRotate(-0.8,0.8,-0.8,0.8);
                         motorController.servo1SetPosition(0.9);
                         sleep(800);
-                        motorController.autoMotor(0.2);
                         sleep(800);
                         break;
                     case "left":
@@ -80,7 +78,6 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         motorController.masterMotorRotate(0.5,0.5,0.5,0.5);
                         motorController.masterMotorRotate(1.0,1.0,1.0,1.0);
                         motorController.masterMotorRotate(-3.0, -3.0, 3.0,3.0);
-                        motorController.autoMotor(-0.5);
                         sleep(800);
                         motorController.masterMotorRotate(0.1, 0.1, -0.1,-0.1);
                         motorController.masterMotorRotate(-1.7,-1.7,-1.7,-1.7);
@@ -88,7 +85,6 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         motorController.masterMotorRotate(-0.3, -0.3, 0.3,0.3);
                         motorController.servo2SetPosition(0.9);
                         sleep(800);
-                        motorController.autoMotor(0.2);
                         sleep(800);
                         break;
                     case "right":
@@ -97,13 +93,11 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
                         motorController.servo1SetPosition(0.65);
                         sleep(800);
                         motorController.masterMotorRotate(0.7,0.7,0.7,0.7);
-                        motorController.autoMotor(-0.5);
                         sleep(800);
                         motorController.masterMotorRotate(0.1, 0.1, -0.1,-0.1);
                         motorController.masterMotorRotate(-3.5,-3.5,-3.5,-3.5);
                         motorController.servo2SetPosition(0.9);
                         sleep(800);
-                        motorController.autoMotor(0.2);
                         sleep(800);
                         break;
                 }

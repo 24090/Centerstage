@@ -7,9 +7,7 @@ public class Positioning {
     public DcMotor motor1;
     public DcMotor motor2;
     public DcMotor motor3;
-    public DcMotor motor4;
     LinearOpMode opMode1;
-    boolean opModeIsActive;
     double lengthBetweenEncodersVertically;
     double lengthBetweenEncodersHorizontally;
     MotorController motorController = new MotorController(null);
