@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
-
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
 import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 
@@ -13,8 +10,6 @@ public class AutomaticTesting extends LinearOpMode {
     MotorController motorController;
     Positioning positioning;
     private String positionOfPixel = "";
-    HuskyLens huskyLens;
-    boolean autoComplete = false;
     @Override
     public void runOpMode() {
         positioning = new Positioning(this);
@@ -37,10 +32,13 @@ public class AutomaticTesting extends LinearOpMode {
             sleep(800);
             switch (positionOfPixel) {
                 case "middle":
+                    telemetry.addData("positionOfPixel", "middle");
                     break;
                 case "left":
+                    telemetry.addData("positionOfPixel", "left");
                     break;
                 case "right":
+                    telemetry.addData("positionOfPixel", "right");
                     break;
             }
         }

@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -21,30 +20,24 @@ public class Positioning {
         opMode1 = opMode;
     }
 
-    public void updatePosition(LinearOpMode opMode){
-        while (opMode.opModeIsActive()){
+    public double[] updatePosition(){
+        while (opMode1.opModeIsActive()){
             changeVector = new double[]{tickToCMConstant * ((motorController.getTicks(motor1) + motorController.getTicks(motor2)) / 2), tickToCMConstant * (motorController.getTicks(motor3) - lengthBetweenEncodersHorizontally * ((motorController.getTicks(motor2) - motorController.getTicks(motor1)) / lengthBetweenEncodersVertically)), tickToCMConstant * ((motorController.getTicks(motor2) - motorController.getTicks(motor1)) / lengthBetweenEncodersVertically)};
             if (movements == 0){
-                heading = heading + changeVector[3];
-                currentPosition[1] = initialPosition[1] + Math.cos(heading)*changeVector[1] - Math.sin(heading)*changeVector[2];
-                currentPosition[2] = initialPosition[2] + Math.sin(heading)*changeVector[1] + Math.cos(heading)*changeVector[2];
+                heading = heading + changeVector[2];
+                currentPosition[0] = initialPosition[0] + Math.cos(heading)*changeVector[0] - Math.sin(heading)*changeVector[1];
+                currentPosition[1] = initialPosition[1] + Math.sin(heading)*changeVector[0] + Math.cos(heading)*changeVector[1];
                 movements++;
             } else {
-                heading = heading + changeVector[3];
-                currentPosition[1] = currentPosition[1] + Math.cos(heading)*changeVector[1] - Math.sin(heading)*changeVector[2];
-                currentPosition[2] = currentPosition[2] + Math.sin(heading)*changeVector[1] + Math.cos(heading)*changeVector[2];
+                heading = heading + changeVector[2];
+                currentPosition[0] = currentPosition[0] + Math.cos(heading)*changeVector[0] - Math.sin(heading)*changeVector[1];
+                currentPosition[1] = currentPosition[1] + Math.sin(heading)*changeVector[0] + Math.cos(heading)*changeVector[1];
                 movements++;
             }
         }
-    }
-    Thread positionUpdater = new Thread(() -> {updatePosition(opMode1);});
-    public void startPositionUpdater(){
-        positionUpdater.start();
+        return currentPosition;
     }
     public double getCentimetersTravelled(DcMotor motor) {
-        return motorController.getEncoderTicks(motor1) * tickToCMConstant;
-    }
-    public double[] getPositionOnBoard(){
-        return currentPosition;
+        return motorController.getEncoderTicks(motor) * tickToCMConstant;
     }
 }

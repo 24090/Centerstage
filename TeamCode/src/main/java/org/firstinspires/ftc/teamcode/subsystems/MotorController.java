@@ -82,27 +82,32 @@ public class MotorController {
         linearMotor.setPower(power);
     }
     public void setLinearPosition(double position){
-        while (linearMotor.getCurrentPosition() != position * linearSlideConstant){
-            if (linearMotor.getCurrentPosition() < position * linearSlideConstant && position < 0.7){
-                linearMotor.setPower(0.1);
+        if ( -0.7 < position && position < 0.7 ){
+            while (linearMotor.getCurrentPosition() != position * linearSlideConstant){
+                linearMotor.setPower(-Math.signum((linearMotor.getCurrentPosition()/linearSlideConstant) - position)*0.1);
             }
-            if (linearMotor.getCurrentPosition() > 0.7 && linearMotor.getCurrentPosition()/linearSlideConstant - position < 0){
-                linearMotor.setPower(-0.1);
-            }
+            linearMotor.setPower(0);
         }
-        linearMotor.setPower(0);
     }
     public void setArmAngle(double degree){
-        while (armMotor.getCurrentPosition()/armConstant != degree){
-            if (armMotor.getCurrentPosition()/armConstant-degree < 0 || armMotor.getCurrentPosition()/armConstant + degree > 0.7){
-            } else {
-                armMotor.setPower(Math.signum(-armMotor.getCurrentPosition()/armConstant + degree) * 0.1);
+        if (-0.7 < degree && degree < 0.7){
+            while (armMotor.getCurrentPosition()/armConstant != degree){
+                    armMotor.setPower(-Math.signum((armMotor.getCurrentPosition()/armConstant) - degree) * 0.1);
             }
+            armMotor.setPower(0);
+        }
+    }
+    public void armHold(){
+        if (armMotor.getCurrentPosition() <0.7){
+            armMotor.setPower(0.01);
+        } else {
+            armMotor.setPower(-0.01);
         }
     }
     public void servo3SetPosition(double position){
         servo3.setPosition(position);
     }
+
     public double getMotorRotations(DcMotor motor){
         return TicksToRotations(motor.getCurrentPosition());
     }
@@ -115,22 +120,23 @@ public class MotorController {
     public void masterMotorRotate(double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
         masterMotorRotate(new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{1.0, 1.0, 1.0, 1.0});
     }
-    public int getTicks(DcMotor motor){
+    public double getTicks(DcMotor motor){
         return motor.getCurrentPosition();
     }
     //function with power input
     public void masterMotorRotate(double[] motorRotations, double[] motorPowers) {
         // create threads for each motor and run them
-        Thread motorThread1 = new Thread(() -> {rotateMotor(motorRotations[0], motorPowers[0], motor1);});
-        Thread motorThread2 = new Thread(() -> {rotateMotor(motorRotations[1], motorPowers[1],motor2);});
-        Thread motorThread3 = new Thread(() -> {rotateMotor(-motorRotations[2], motorPowers[2], motor3);});
-        Thread motorThread4 = new Thread(() -> {rotateMotor(-motorRotations[3], motorPowers[3], motor4);});
+        Thread motorThread1 = new Thread(() -> rotateMotor(motorRotations[0], motorPowers[0], motor1));
+        Thread motorThread2 = new Thread(() -> rotateMotor(motorRotations[1], motorPowers[1],motor2));
+        Thread motorThread3 = new Thread(() -> rotateMotor(-motorRotations[2], motorPowers[2], motor3));
+        Thread motorThread4 = new Thread(() -> rotateMotor(-motorRotations[3], motorPowers[3], motor4));
         motorThread1.start();
         motorThread2.start();
         motorThread3.start();
         motorThread4.start();
         // wait until threads are done executing
-        while (motorThread1.isAlive()||motorThread2.isAlive()||motorThread3.isAlive()||motorThread4.isAlive()){;}
+        while (motorThread1.isAlive()||motorThread2.isAlive()||motorThread3.isAlive()||motorThread4.isAlive()){
+        }
     }
     public void rotateMotor(double motorRotations, double motorPower, DcMotor motor){
         double initialRotation = getMotorRotations(motor);
@@ -142,22 +148,22 @@ public class MotorController {
     public void masterMotorControl(double[] motorPowers){
         motor1Target = motorPowers[0];
         motor2Target = motorPowers[1];
-        motor2Target = motorPowers[2];
+        motor3Target = motorPowers[2];
         motor4Target = motorPowers[3];
     }
-    public void masterMotorControlForThread( LinearOpMode opMode,double motorspeed1, double motorspeed2,double motorspeed3,double motorspeed4){
+    public void masterMotorControlForThread( LinearOpMode opMode,double motorSpeed1, double motorSpeed2,double motorSpeed3,double motorSpeed4){
         while (opMode.opModeIsActive()){
-            motor1.setPower(-motorspeed1);
-            motor2.setPower(-motorspeed2);
-            motor3.setPower(motorspeed3);
-            motor4.setPower(motorspeed4);
+            motor1.setPower(-motorSpeed1);
+            motor2.setPower(-motorSpeed2);
+            motor3.setPower(motorSpeed3);
+            motor4.setPower(motorSpeed4);
         }
     }
-    public void masterMotorControl2(double motorspeed1, double motorspeed2,double motorspeed3,double motorspeed4){
-        motor1Target = motorspeed1;
-        motor2Target = motorspeed2;
-        motor2Target = motorspeed3;
-        motor4Target = motorspeed4;
+    public void masterMotorControl2(double motorSpeed1, double motorSpeed2,double motorSpeed3,double motorSpeed4){
+        motor1Target = motorSpeed1;
+        motor2Target = motorSpeed2;
+        motor3Target = motorSpeed3;
+        motor4Target = motorSpeed4;
     }
     public void setPowerByVector(double amount_forward, double amount_sideways, double amount_turn){
         masterMotorControl(getPowersFromVector(amount_forward, amount_sideways, amount_turn));
@@ -181,12 +187,11 @@ public class MotorController {
     }
     //Robot Oriented, so it will not move to a position on the field, it will move by an x and y relative to the robot's heading (In cm).
     public void turnByDegrees(double degree){
-        int i = 0;
         double initialRotation1 = positioning.getCentimetersTravelled(motor1);
         double initialRotation2 = positioning.getCentimetersTravelled(motor2);
         double initialRotation3 = positioning.getCentimetersTravelled(motor3);
         while ((opMode.opModeIsActive()) && ((Math.abs(positioning.getCentimetersTravelled(motor1)-initialRotation1) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(positioning.getCentimetersTravelled(motor2)-initialRotation2) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(positioning.getCentimetersTravelled(motor3)-initialRotation3) < degree*(lengthBetweenEncodersHorizontally/2)))){
-            masterMotorControl2(-Math.signum(degree)*1.0,-Math.signum(degree)*1.0,Math.signum(degree)*1.0,Math.signum(degree)*1.0);
+            masterMotorControl2(-Math.signum(degree),-Math.signum(degree),Math.signum(degree),Math.signum(degree));
         }
         masterMotorControl2(0,0,0,0);
     }
