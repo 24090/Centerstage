@@ -3,13 +3,11 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
-import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 
 
 @Autonomous()
 public class AutomaticFinalCloseRed extends LinearOpMode {
     MotorController motorController;
-    Positioning positioning;
     private String positionOfPixel = "";
     HuskyLens huskyLens;
     @Override

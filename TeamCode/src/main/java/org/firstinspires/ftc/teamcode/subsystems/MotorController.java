@@ -14,7 +14,6 @@ public class MotorController {
     public DcMotor motor4;
     public DcMotor armMotor;
     public Odometry odometry;
-    double tickToCMConstant = (2 * Math.PI * 2.4)/2000;
     double lengthBetweenEncodersVertically;
     double lengthBetweenEncodersHorizontally;
     double armConstant;
@@ -73,9 +72,6 @@ public class MotorController {
     }
     public double getCentimetersTravelled(DcMotor motor){
         return motor.getCurrentPosition() * tickToCMConstant;
-    }
-    public void armMotor(double speed){
-        armMotor.setPower(speed);
     }
     public MotorController(LinearOpMode opMode1){
         opMode = opMode1;
@@ -220,28 +216,10 @@ public class MotorController {
         linearMotor.start();
         servoWrist.start();
     }
-    public void moveByXYRobotOriented(double x, double y){
-        double initialRotation1 = positioning.getCentimetersTravelled(motor1);
-        double initialRotation2 = positioning.getCentimetersTravelled(motor2);
-        double initialRotation3 = positioning.getCentimetersTravelled(motor3);
-        while ((opMode.opModeIsActive()) && (((Math.abs(positioning.getCentimetersTravelled(motor1)-initialRotation1)) < y)||(Math.abs((positioning.getCentimetersTravelled(motor2)-initialRotation2)) < y)||(Math.abs((positioning.getCentimetersTravelled(motor3)-initialRotation3)) < x))){
-            masterMotorControl(getPowersFromVector(y,x,0));
-            }
-        masterMotorControl2(0,0,0,0);
-    }
     // 0 = 0.388
     // 90 = 0.08
     // y = (90/-38)(position) + 0.388
     //Robot Oriented, so it will not move to a position on the field, it will move by an x and y relative to the robot's heading (In cm).
-    public void turnByDegrees(double degree){
-        double initialRotation1 = positioning.getCentimetersTravelled(motor1);
-        double initialRotation2 = positioning.getCentimetersTravelled(motor2);
-        double initialRotation3 = positioning.getCentimetersTravelled(motor3);
-        while ((opMode.opModeIsActive()) && ((Math.abs(positioning.getCentimetersTravelled(motor1)-initialRotation1) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(positioning.getCentimetersTravelled(motor2)-initialRotation2) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(positioning.getCentimetersTravelled(motor3)-initialRotation3) < degree*(lengthBetweenEncodersHorizontally/2)))){
-            masterMotorControl2(-Math.signum(degree),-Math.signum(degree),Math.signum(degree),Math.signum(degree));
-        }
-        masterMotorControl2(0,0,0,0);
-    }
     public double getCentimetersTravelled(){
         return motor1.getCurrentPosition() * tickToCMConstant;
     }

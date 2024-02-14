@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Controlled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
-import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 
 @TeleOp()
 public class Testing extends LinearOpMode{
@@ -13,8 +12,7 @@ public class Testing extends LinearOpMode{
     boolean leftOpen = false;
     @Override
     public void runOpMode(){
-        motorController = new MotorController(this);
-        motorController.init(hardwareMap);
+        motorController = new MotorController(this, hardwareMap);
         motorController.servo2SetPosition(0.0);
         positionServo = 0.0;
         waitForStart();
