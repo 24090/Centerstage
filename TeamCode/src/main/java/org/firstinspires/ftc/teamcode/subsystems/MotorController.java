@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class MotorController {
     public DcMotor motor1;
+    double tickToCMConstant = (2 * Math.PI * 2.4)/2000;
     public DcMotor motor2;
     public DcMotor motor3;
     public DcMotor motor4;
     public DcMotor armMotor;
+    public Odometry odometry;
     double tickToCMConstant = (2 * Math.PI * 2.4)/2000;
     double lengthBetweenEncodersVertically;
     double lengthBetweenEncodersHorizontally;
@@ -23,10 +25,9 @@ public class MotorController {
     private Servo servo2;
     private Servo servo3;
     LinearOpMode opMode;
-    Positioning positioning;
     double ticksPerRotation;
 
-    public void init(HardwareMap hwMap){
+    private void init(HardwareMap hwMap){
         servo1 = hwMap.get(Servo.class, "servo");
         servo1.setDirection(Servo.Direction.FORWARD);
         servo2 = hwMap.get(Servo.class, "servo2");
@@ -57,8 +58,24 @@ public class MotorController {
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        positioning = new Positioning(opMode);
         ticksPerRotation = motor1.getMotorType().getTicksPerRev();
+        odometry = new Odometry(opMode, motor1.getCurrentPosition(), motor2.getCurrentPosition(), motor3.getCurrentPosition());
+        Thread update_thread = new Thread(() ->
+        {
+            while (opMode.opModeIsActive()) {
+                odometry.update_odometry_data(motor1.getCurrentPosition(),motor2.getCurrentPosition(),motor3.getCurrentPosition());
+            }
+        });
+    }
+    public MotorController(LinearOpMode opMode1, HardwareMap hwMap){
+        opMode = opMode1;
+        init(hwMap);
+    }
+    public double getCentimetersTravelled(DcMotor motor){
+        return motor.getCurrentPosition() * tickToCMConstant;
+    }
+    public void armMotor(double speed){
+        armMotor.setPower(speed);
     }
     public MotorController(LinearOpMode opMode1){
         opMode = opMode1;
@@ -116,7 +133,6 @@ public class MotorController {
     public void servo3SetPosition(double position){
         servo3.setPosition(position);
     }
-
     public double getMotorRotations(DcMotor motor){
         return TicksToRotations(motor.getCurrentPosition());
     }
@@ -192,6 +208,9 @@ public class MotorController {
         return (denominator != 0
                 ?new double[]{(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator}
                 :new double[]{0,0,0,0});
+    }
+    public void outputOdometryData(){
+        odometry.outputOdometryData();
     }
     public void setArmPosition(double rotaryPosition, double linearPosition, double servoPosition){
         Thread armMotor = new Thread(() -> setArmAngle(rotaryPosition));

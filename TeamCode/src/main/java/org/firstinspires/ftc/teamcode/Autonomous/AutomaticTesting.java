@@ -2,19 +2,15 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
-import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 
 
 @Autonomous()
 public class AutomaticTesting extends LinearOpMode {
     MotorController motorController;
-    Positioning positioning;
     private String positionOfPixel = "";
     @Override
     public void runOpMode() {
-        positioning = new Positioning(this);
-        motorController = new MotorController(this);
-        motorController.init(hardwareMap);
+        motorController = new MotorController(this, hardwareMap);
         while (positionOfPixel == "" && opModeIsActive()){
             if (gamepad1.left_bumper) {
                 positionOfPixel = "left";
@@ -43,7 +39,6 @@ public class AutomaticTesting extends LinearOpMode {
                     break;
             }
             telemetry.update();
-            sleep(1000);
         }
     }
 }

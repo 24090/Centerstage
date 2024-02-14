@@ -21,9 +21,7 @@ public class AutomaticFinalFarRed extends LinearOpMode {
             telemetry.addData(">>", "Press start to continue");
         }
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
-        motorController = new MotorController(this);
-        positioning = new Positioning(this);
-        motorController.init(hardwareMap);
+        motorController = new MotorController(this, hardwareMap);
         telemetry.update();
         while (opModeIsActive() && positionOfPixel == "") {
             HuskyLens.Block[] blocks = huskyLens.blocks();

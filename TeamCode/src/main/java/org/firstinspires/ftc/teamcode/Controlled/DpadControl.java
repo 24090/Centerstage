@@ -3,8 +3,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.Conversions;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
-import org.firstinspires.ftc.teamcode.subsystems.Positioning;
-
 @TeleOp()
 public class DpadControl extends LinearOpMode{
     MotorController motorController;
@@ -17,8 +15,7 @@ public class DpadControl extends LinearOpMode{
     double[] currentPosition;
     @Override
     public void runOpMode(){
-        motorController = new MotorController(this);
-        motorController.init(hardwareMap);
+        motorController = new MotorController(this, hardwareMap);
         waitForStart();
         while(opModeIsActive()){
             verticalDirection = (converter.booleanToDouble(gamepad1.dpad_up) - converter.booleanToDouble(gamepad1.dpad_down));

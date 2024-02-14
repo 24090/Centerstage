@@ -1,19 +1,18 @@
 package org.firstinspires.ftc.teamcode.Controlled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
-import org.firstinspires.ftc.teamcode.subsystems.Positioning;
-
+import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 @TeleOp()
 public class Controlled extends LinearOpMode {
-    MotorController motorController = new MotorController(this);
+    MotorController motorController = new MotorController(this, hardwareMap);
     double positionServo;
     boolean rightOpen = false;
     boolean leftOpen = false;
 
     @Override
     public void runOpMode() {
-        motorController.init(hardwareMap);
         motorController.servo2SetPosition(0.0);
         positionServo = 0.0;
         waitForStart();
@@ -92,8 +91,7 @@ public class Controlled extends LinearOpMode {
             if (gamepad2.b){
                 motorController.setArmPosition(-6,60, 6);
             }
-            telemetry.addData("servo", positionServo);
-            telemetry.update();
+            motorController.outputOdometryData();
             }
         }
 }
