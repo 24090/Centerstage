@@ -8,15 +8,34 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class MotorController {
     public DcMotor motor1;
+    double tickToCMConstant = (2 * Math.PI * 2.4)/2000;
     public DcMotor motor2;
     public DcMotor motor3;
     public DcMotor motor4;
+<<<<<<< Updated upstream
     private Servo servo1;
     private Servo servo2;
+=======
+    public DcMotor armMotor;
+    public Odometry odometry;
+    double lengthBetweenEncodersVertically;
+    double lengthBetweenEncodersHorizontally;
+    double armConstant;
+    double linearSlideConstant;
+    public DcMotor linearMotor;
+    double motor1Target;
+    double motor2Target;
+    double motor3Target;
+    double motor4Target;
+    private Servo servo1;
+    private Servo servo2;
+    private Servo servo3;
+    LinearOpMode opMode;
+>>>>>>> Stashed changes
     double ticksPerRotation;
     boolean startRotation;
 
-    public void init(HardwareMap hwMap){
+    private void init(HardwareMap hwMap){
         servo1 = hwMap.get(Servo.class, "servo");
         servo1.setDirection(Servo.Direction.FORWARD);
         servo2 = hwMap.get(Servo.class, "servo2");
@@ -37,8 +56,43 @@ public class MotorController {
         motor4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor4.setDirection(DcMotorSimple.Direction.FORWARD);
+<<<<<<< Updated upstream
+=======
+        linearMotor = hwMap.get(DcMotor.class, "linearMotor");
+        linearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        armMotor = hwMap.get(DcMotor.class, "armMotor");
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+>>>>>>> Stashed changes
         ticksPerRotation = motor1.getMotorType().getTicksPerRev();
+        odometry = new Odometry(opMode, motor1.getCurrentPosition(), motor2.getCurrentPosition(), motor3.getCurrentPosition());
+        Thread update_thread = new Thread(() ->
+        {
+            while (opMode.opModeIsActive()) {
+                odometry.update_odometry_data(motor1.getCurrentPosition(),motor2.getCurrentPosition(),motor3.getCurrentPosition());
+            }
+        });
     }
+<<<<<<< Updated upstream
+=======
+    public MotorController(LinearOpMode opMode1, HardwareMap hwMap){
+        opMode = opMode1;
+        init(hwMap);
+    }
+    public double getCentimetersTravelled(DcMotor motor){
+        return motor.getCurrentPosition() * tickToCMConstant;
+    }
+    public void armMotor(double speed){
+        armMotor.setPower(speed);
+    }
+    Thread motorControl = new Thread(() -> masterMotorControlForThread(opMode,motor1Target, motor2Target, motor3Target, motor4Target));
+    public void startMotors(){
+        motorControl.start();
+    }
+>>>>>>> Stashed changes
     public void servo1SetPosition(double position){
         servo1.setPosition(position);
     }
@@ -97,7 +151,36 @@ public class MotorController {
     public double[] getPowersFromVector(double amount_forward, double amount_sideways, double amount_turn){
         double RightwardPower = amount_forward + amount_sideways;
         double LeftwardPower = amount_forward - amount_sideways;
+<<<<<<< Updated upstream
         double denominator = Math.max(Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn), 1) * 2;
         return new double[] {(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator};
+=======
+        double denominator = (Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn));
+        return (denominator != 0
+                ?new double[]{(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator}
+                :new double[]{0,0,0,0});
+    }
+    public void moveByXYRobotOriented(double x, double y){
+        double initialRotation1 = getCentimetersTravelled(motor1);
+        double initialRotation2 = getCentimetersTravelled(motor2);
+        double initialRotation3 = getCentimetersTravelled(motor3);
+        while ((opMode.opModeIsActive()) && (((Math.abs(getCentimetersTravelled(motor1)-initialRotation1)) < y)||(Math.abs((getCentimetersTravelled(motor2)-initialRotation2)) < y)||(Math.abs((getCentimetersTravelled(motor3)-initialRotation3)) < x))){
+            masterMotorControl(getPowersFromVector(y,x,0));
+            }
+        masterMotorControl2(0,0,0,0);
+    }
+    //Robot Oriented, so it will not move to a position on the field, it will move by an x and y relative to the robot's heading (In cm).
+    public void turnByDegrees(double degree){
+        double initialRotation1 = getCentimetersTravelled(motor1);
+        double initialRotation2 = getCentimetersTravelled(motor2);
+        double initialRotation3 = getCentimetersTravelled(motor3);
+        while ((opMode.opModeIsActive()) && ((Math.abs(getCentimetersTravelled(motor1)-initialRotation1) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(getCentimetersTravelled(motor2)-initialRotation2) < degree*(lengthBetweenEncodersVertically/2))||(Math.abs(getCentimetersTravelled(motor3)-initialRotation3) < degree*(lengthBetweenEncodersHorizontally/2)))){
+            masterMotorControl2(-Math.signum(degree),-Math.signum(degree),Math.signum(degree),Math.signum(degree));
+        }
+        masterMotorControl2(0,0,0,0);
+>>>>>>> Stashed changes
+    }
+    public void outputOdometryData(){
+        odometry.outputOdometryData();
     }
 }

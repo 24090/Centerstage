@@ -1,46 +1,24 @@
 package org.firstinspires.ftc.teamcode.Controlled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.MotorController;
-<<<<<<< Updated upstream
-@TeleOp()
-public class Controlled extends OpMode {
-    MotorController motorController1 = new MotorController();
-    String turningDirection;
-    boolean isTurning;
-    double velocity;
-    double velocity2;
-
-    @Override
-    public void init() {
-        motorController1.init(hardwareMap);
-        motorController1.servo2SetPosition(0.23);
-    }
-
-    @Override
-    public void loop() {
-        motorController1.setPowerByVector(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-=======
-import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 
 @TeleOp()
-public class Controlled extends LinearOpMode {
-    MotorController motorController = new MotorController(this, hardwareMap);
-    double tickToCMConstant = (2 * Math.PI * 2.4)/2000;
+public class Testing extends LinearOpMode{
+    MotorController motorController;
     double[] currentPosition;
-    double positionServo;
     boolean rightOpen = false;
+    double positionServo;
     boolean leftOpen = false;
-
     @Override
-    public void runOpMode() {
-        motorController.startMotors();
-        motorController.servo1SetPosition(0.23);
+    public void runOpMode(){
+        motorController = new MotorController(this, hardwareMap);
+        motorController.servo2SetPosition(0.0);
+        positionServo = 0.0;
         waitForStart();
-        while (opModeIsActive()) {
-            motorController.setPowerByVector(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-            if (gamepad2.right_bumper) {
-                if (rightOpen) {
+        while(opModeIsActive()){
+            if (gamepad2.right_bumper){
+                if (rightOpen){
                     motorController.servo1SetPosition(0.37);
                     sleep(200);
                     rightOpen = false;
@@ -50,8 +28,8 @@ public class Controlled extends LinearOpMode {
                     rightOpen = true;
                 }
             }
-            if (gamepad2.left_bumper) {
-                if (leftOpen) {
+            if (gamepad2.left_bumper){
+                if (leftOpen){
                     motorController.servo3SetPosition(0.39);
                     sleep(200);
                     leftOpen = false;
@@ -61,15 +39,15 @@ public class Controlled extends LinearOpMode {
                     leftOpen = true;
                 }
             }
-            if (gamepad2.a) {
-                if (leftOpen) {
-                    if (rightOpen) {
+            if (gamepad2.a){
+                if (leftOpen){
+                    if (rightOpen){
                         motorController.servo3SetPosition(0.39);
                         motorController.servo1SetPosition(0.37);
                         sleep(200);
                         leftOpen = false;
                         rightOpen = false;
-                    } else {
+                    } else{
                         motorController.servo3SetPosition(0.39);
                         motorController.servo1SetPosition(0.46);
                         sleep(200);
@@ -77,7 +55,7 @@ public class Controlled extends LinearOpMode {
                         rightOpen = true;
                     }
                 } else {
-                    if (rightOpen) {
+                    if (rightOpen){
                         motorController.servo3SetPosition(0.3);
                         motorController.servo1SetPosition(0.37);
                         sleep(200);
@@ -92,33 +70,36 @@ public class Controlled extends LinearOpMode {
                     }
                 }
             }
-            positionServo += gamepad2.left_trigger / 100;
-            positionServo -= gamepad2.right_trigger / 100;
+            positionServo += gamepad2.left_trigger/100;
+            positionServo -= gamepad2.right_trigger/100;
             sleep(20);
-            if (positionServo > 1) {
+            if (positionServo > 1){
                 positionServo = 1.0;
             }
-            if (positionServo < 0) {
+            if (positionServo < 0){
                 positionServo = 0.0;
             }
             motorController.servo2SetPosition(positionServo);
-            if (gamepad2.dpad_down && motorController.linearMotor.getCurrentPosition() < -5) {
-                motorController.setLinearMotorPower(0.5);
-            } else if (gamepad2.dpad_up && motorController.linearMotor.getCurrentPosition() > -1230) {
-                motorController.setLinearMotorPower(-0.5);
+            if (gamepad2.dpad_down){
+                motorController.setLinearMotorPower(0.1);
+            } else if (gamepad2.dpad_up){
+                motorController.setLinearMotorPower(-0.1);
             } else {
                 motorController.setLinearMotorPower(0.0);
             }
-            if (gamepad2.b) {
-                motorController.armMotor(0.2);
-            } else if (gamepad2.y) {
-                motorController.armMotor(-0.2);
+            if (gamepad2.b){
+                motorController.armMotor(0.5);
+            } else if (gamepad2.y){
+                motorController.armMotor(-0.5);
             } else {
-                motorController.armHold();
+                motorController.armMotor(0.0);
             }
-            motorController.outputOdometryData();
+            telemetry.addData("x", currentPosition[0]);
+            telemetry.addData("y", currentPosition[1]);
+            telemetry.addData("heading", currentPosition[2]);
+            telemetry.addData("ticks", motorController.linearMotor.getCurrentPosition());
+            telemetry.addData("ticks2", motorController.armMotor.getCurrentPosition());
+            telemetry.update();
         }
->>>>>>> Stashed changes
     }
 }
-
