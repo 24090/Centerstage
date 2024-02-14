@@ -14,7 +14,8 @@ public class AutomaticTesting extends LinearOpMode {
     public void runOpMode() {
         positioning = new Positioning(this);
         motorController = new MotorController(this);
-        while (positionOfPixel == ""){
+        motorController.init(hardwareMap);
+        while (positionOfPixel == "" && opModeIsActive()){
             if (gamepad1.left_bumper) {
                 positionOfPixel = "left";
             }
@@ -41,6 +42,8 @@ public class AutomaticTesting extends LinearOpMode {
                     telemetry.addData("positionOfPixel", "right");
                     break;
             }
+            telemetry.update();
+            sleep(1000);
         }
     }
 }

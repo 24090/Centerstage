@@ -7,8 +7,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 @TeleOp()
 public class Controlled extends LinearOpMode {
     MotorController motorController = new MotorController(this);
-    Positioning positioning = new Positioning(this);
-    double[] currentPosition;
     double positionServo;
     boolean rightOpen = false;
     boolean leftOpen = false;
@@ -16,11 +14,11 @@ public class Controlled extends LinearOpMode {
     @Override
     public void runOpMode() {
         motorController.init(hardwareMap);
-        motorController.startMotors();
-        motorController.servo1SetPosition(0.23);
+        motorController.servo2SetPosition(0.0);
+        positionServo = 0.0;
         waitForStart();
         while(opModeIsActive()) {
-            motorController.setPowerByVector(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            motorController.setPowerByVector((gamepad1.left_stick_y), (gamepad1.left_stick_x), -(gamepad1.right_stick_x));
             if (gamepad2.right_bumper){
                 if (rightOpen){
                     motorController.servo1SetPosition(0.37);
@@ -92,18 +90,9 @@ public class Controlled extends LinearOpMode {
                 motorController.setLinearMotorPower(0.0);
             }
             if (gamepad2.b){
-                motorController.armMotor(0.2);
-            } else if (gamepad2.y){
-                motorController.armMotor(-0.2);
-            } else {
-                motorController.armHold();
+                motorController.setArmPosition(-6,60, 6);
             }
-            currentPosition = positioning.updatePosition();
-            telemetry.addData("x", currentPosition[0]);
-            telemetry.addData("y", currentPosition[1]);
-            telemetry.addData("heading", currentPosition[2]);
-            telemetry.addData("linearSlideTicks", motorController.linearMotor.getCurrentPosition());
-            telemetry.addData("armJointTicks", motorController.armMotor.getCurrentPosition());
+            telemetry.addData("servo", positionServo);
             telemetry.update();
             }
         }

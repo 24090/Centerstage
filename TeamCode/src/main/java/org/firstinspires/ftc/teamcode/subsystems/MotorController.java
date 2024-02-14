@@ -12,15 +12,13 @@ public class MotorController {
     public DcMotor motor3;
     public DcMotor motor4;
     public DcMotor armMotor;
+    double tickToCMConstant = (2 * Math.PI * 2.4)/2000;
     double lengthBetweenEncodersVertically;
     double lengthBetweenEncodersHorizontally;
     double armConstant;
-    double linearSlideConstant;
     public DcMotor linearMotor;
-    double motor1Target;
-    double motor2Target;
-    double motor3Target;
-    double motor4Target;
+    double[] motorTargetPowers = {0,0,0,0};
+    double[] currentPowers = {0,0,0,0};
     private Servo servo1;
     private Servo servo2;
     private Servo servo3;
@@ -68,10 +66,6 @@ public class MotorController {
     public void armMotor(double speed){
         armMotor.setPower(speed);
     }
-    Thread motorControl = new Thread(() -> masterMotorControlForThread(opMode,motor1Target, motor2Target, motor3Target, motor4Target));
-    public void startMotors(){
-        motorControl.start();
-    }
     public void servo1SetPosition(double position){
         servo1.setPosition(position);
     }
@@ -82,27 +76,42 @@ public class MotorController {
         linearMotor.setPower(power);
     }
     public void setLinearPosition(double position){
-        if ( -0.7 < position && position < 0.7 ){
-            while (linearMotor.getCurrentPosition() != position * linearSlideConstant){
-                linearMotor.setPower(-Math.signum((linearMotor.getCurrentPosition()/linearSlideConstant) - position)*0.1);
+        if (33 < position && position < 60){
+            if (linearMotor.getCurrentPosition() < (-1234/27)*(position-33)) {
+                while (linearMotor.getCurrentPosition() < (-1234/27)*(position-33)){
+                    linearMotor.setPower(0.1);
+                }
+                linearMotor.setPower(0);
             }
-            linearMotor.setPower(0);
+            if (linearMotor.getCurrentPosition() > (-1234/27)*(position-33)) {
+                while (linearMotor.getCurrentPosition() > (-1234/27)*(position-33)){
+                    linearMotor.setPower(-0.1);
+                }
+                linearMotor.setPower(0);
+            }
         }
     }
     public void setArmAngle(double degree){
-        if (-0.7 < degree && degree < 0.7){
-            while (armMotor.getCurrentPosition()/armConstant != degree){
-                    armMotor.setPower(-Math.signum((armMotor.getCurrentPosition()/armConstant) - degree) * 0.1);
+        if (-11 < degree && degree < 185){
+            if (armMotor.getCurrentPosition() < -(1449/196)*(degree+11)){
+                while (armMotor.getCurrentPosition() < -(1449/196)*(degree+11)){
+                    armMotor.setPower(0.1);
+                }
+                armMotor.setPower(0);
             }
-            armMotor.setPower(0);
+            if (armMotor.getCurrentPosition() > -(1449/196)*(degree+11)){
+                while (armMotor.getCurrentPosition() > -(1449/196)*(degree+11)){
+                    armMotor.setPower(-0.1);
+                }
+                armMotor.setPower(0);
+            }
         }
     }
     public void armHold(){
-        if (armMotor.getCurrentPosition() <0.7){
-            armMotor.setPower(0.01);
-        } else {
-            armMotor.setPower(-0.01);
+        if (armMotor.getCurrentPosition() > -10 || armMotor.getCurrentPosition() < -1350){
+            armMotor.setPower(0);
         }
+        armMotor.setPower((-683 - armMotor.getCurrentPosition())/100);
     }
     public void servo3SetPosition(double position){
         servo3.setPosition(position);
@@ -119,9 +128,6 @@ public class MotorController {
     }
     public void masterMotorRotate(double motorRotations1, double motorRotations2, double motorRotations3, double motorRotations4){
         masterMotorRotate(new double[]{motorRotations1, motorRotations2, motorRotations3, motorRotations4}, new double[]{1.0, 1.0, 1.0, 1.0});
-    }
-    public double getTicks(DcMotor motor){
-        return motor.getCurrentPosition();
     }
     //function with power input
     public void masterMotorRotate(double[] motorRotations, double[] motorPowers) {
@@ -145,25 +151,36 @@ public class MotorController {
         }
         motor.setPower(0);
     }
-    public void masterMotorControl(double[] motorPowers){
-        motor1Target = motorPowers[0];
-        motor2Target = motorPowers[1];
-        motor3Target = motorPowers[2];
-        motor4Target = motorPowers[3];
-    }
-    public void masterMotorControlForThread( LinearOpMode opMode,double motorSpeed1, double motorSpeed2,double motorSpeed3,double motorSpeed4){
-        while (opMode.opModeIsActive()){
-            motor1.setPower(-motorSpeed1);
-            motor2.setPower(-motorSpeed2);
-            motor3.setPower(motorSpeed3);
-            motor4.setPower(motorSpeed4);
+    public void masterMotorControla(double[] motorPowers){
+        for (int i = 0; i < motorTargetPowers.length; i++){
+            motorTargetPowers[i] = motorPowers[i];
         }
+        for (int i = 0; i < motorTargetPowers.length; i++){
+            currentPowers[i] = currentPowers[i] + 0.3*(motorTargetPowers[i] - currentPowers[i]);
+        }
+        motor1.setPower(-currentPowers[0]);
+        motor2.setPower(-currentPowers[1]);
+        motor3.setPower(currentPowers[2]);
+        motor4.setPower(currentPowers[3]);
+
+    }
+    public void masterMotorControl(double[] motorPowers){
+        motor1.setPower(-motorPowers[0]);
+        motor2.setPower(-motorPowers[1]);
+        motor3.setPower(motorPowers[2]);
+        motor4.setPower(motorPowers[3]);
+
     }
     public void masterMotorControl2(double motorSpeed1, double motorSpeed2,double motorSpeed3,double motorSpeed4){
-        motor1Target = motorSpeed1;
-        motor2Target = motorSpeed2;
-        motor3Target = motorSpeed3;
-        motor4Target = motorSpeed4;
+        double[] motorPowers = {motorSpeed1,motorSpeed2,motorSpeed3,motorSpeed4};
+        for (int i = 0; i < motorTargetPowers.length; i++){
+            motorTargetPowers[i] = motorPowers[i];
+            currentPowers[i] = currentPowers[i] + 0.3*(motorTargetPowers[i] - currentPowers[i]);
+        }
+        motor1.setPower(-currentPowers[0]);
+        motor2.setPower(-currentPowers[1]);
+        motor3.setPower(currentPowers[2]);
+        motor4.setPower(currentPowers[3]);
     }
     public void setPowerByVector(double amount_forward, double amount_sideways, double amount_turn){
         masterMotorControl(getPowersFromVector(amount_forward, amount_sideways, amount_turn));
@@ -171,10 +188,18 @@ public class MotorController {
     public double[] getPowersFromVector(double amount_forward, double amount_sideways, double amount_turn){
         double RightwardPower = amount_forward + amount_sideways;
         double LeftwardPower = amount_forward - amount_sideways;
-        double denominator = (Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn));
+        double denominator = Math.max(Math.abs(amount_forward) + Math.abs(amount_sideways) + Math.abs(amount_turn), 1);
         return (denominator != 0
                 ?new double[]{(LeftwardPower - amount_turn) / denominator, (RightwardPower - amount_turn) / denominator, (LeftwardPower + amount_turn) / denominator, (RightwardPower + amount_turn) / denominator}
                 :new double[]{0,0,0,0});
+    }
+    public void setArmPosition(double rotaryPosition, double linearPosition, double servoPosition){
+        Thread armMotor = new Thread(() -> setArmAngle(rotaryPosition));
+        Thread linearMotor = new Thread(() -> setLinearPosition(linearPosition));
+        Thread servoWrist = new Thread(() -> servo2SetPosition((90/-38)*(servoPosition)+0.388));
+        armMotor.start();
+        linearMotor.start();
+        servoWrist.start();
     }
     public void moveByXYRobotOriented(double x, double y){
         double initialRotation1 = positioning.getCentimetersTravelled(motor1);
@@ -185,6 +210,9 @@ public class MotorController {
             }
         masterMotorControl2(0,0,0,0);
     }
+    // 0 = 0.388
+    // 90 = 0.08
+    // y = (90/-38)(position) + 0.388
     //Robot Oriented, so it will not move to a position on the field, it will move by an x and y relative to the robot's heading (In cm).
     public void turnByDegrees(double degree){
         double initialRotation1 = positioning.getCentimetersTravelled(motor1);
@@ -194,5 +222,8 @@ public class MotorController {
             masterMotorControl2(-Math.signum(degree),-Math.signum(degree),Math.signum(degree),Math.signum(degree));
         }
         masterMotorControl2(0,0,0,0);
+    }
+    public double getCentimetersTravelled(){
+        return motor1.getCurrentPosition() * tickToCMConstant;
     }
 }

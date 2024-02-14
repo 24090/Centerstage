@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Positioning;
 @TeleOp()
 public class Testing extends LinearOpMode{
     MotorController motorController;
-    Positioning positioning;
     double[] currentPosition;
     boolean rightOpen = false;
     double positionServo;
@@ -15,7 +14,6 @@ public class Testing extends LinearOpMode{
     @Override
     public void runOpMode(){
         motorController = new MotorController(this);
-        positioning = new Positioning(this);
         motorController.init(hardwareMap);
         motorController.servo2SetPosition(0.0);
         positionServo = 0.0;
@@ -85,23 +83,19 @@ public class Testing extends LinearOpMode{
             }
             motorController.servo2SetPosition(positionServo);
             if (gamepad2.dpad_down){
-                motorController.setLinearMotorPower(0.1);
+                motorController.setLinearPosition(47);
             } else if (gamepad2.dpad_up){
                 motorController.setLinearMotorPower(-0.1);
             } else {
                 motorController.setLinearMotorPower(0.0);
             }
             if (gamepad2.b){
-                motorController.armMotor(0.5);
+                motorController.setArmAngle(90);
             } else if (gamepad2.y){
                 motorController.armMotor(-0.5);
             } else {
                 motorController.armMotor(0.0);
             }
-            currentPosition = positioning.updatePosition();
-            telemetry.addData("x", currentPosition[0]);
-            telemetry.addData("y", currentPosition[1]);
-            telemetry.addData("heading", currentPosition[2]);
             telemetry.addData("ticks", motorController.linearMotor.getCurrentPosition());
             telemetry.addData("ticks2", motorController.armMotor.getCurrentPosition());
             telemetry.update();
