@@ -65,6 +65,7 @@ public class MotorController {
                 odometry.update_odometry_data(motor1.getCurrentPosition(),motor2.getCurrentPosition(),motor3.getCurrentPosition());
             }
         });
+        update_thread.start();
     }
     public MotorController(LinearOpMode opMode1, HardwareMap hwMap){
         opMode = opMode1;
