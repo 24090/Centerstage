@@ -22,12 +22,7 @@ public class AutomaticFinalFarBlue extends LinearOpMode {
             telemetry.addData(">>", "Press start to continue");
         }
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
-<<<<<<< Updated upstream
-        motorController = new MotorController();
-        motorController.init(hardwareMap);
-=======
         motorController = new MotorController(this, hardwareMap);
->>>>>>> Stashed changes
         telemetry.update();
         waitForStart();
         while (opModeIsActive() && positionOfPixel == "") {

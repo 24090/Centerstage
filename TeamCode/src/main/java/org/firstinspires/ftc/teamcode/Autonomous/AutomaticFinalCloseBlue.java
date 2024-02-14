@@ -22,14 +22,7 @@ public class AutomaticFinalCloseBlue extends LinearOpMode {
             telemetry.addData(">>", "Press start to continue");
         }
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
-<<<<<<< Updated upstream
-        motorController = new MotorController();
-        motorController.init(hardwareMap);
-        telemetry.update();
-        waitForStart();
-=======
         motorController = new MotorController(this, hardwareMap);
->>>>>>> Stashed changes
         while (opModeIsActive() && positionOfPixel == "") {
             HuskyLens.Block[] blocks = huskyLens.blocks();
             for (int i = 0; i < blocks.length; i++){
